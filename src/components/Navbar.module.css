@@ -1,0 +1,135 @@
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--white);
+  border-bottom: 1px solid var(--taupe-light);
+  padding: 0 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 72px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brandName {
+  font-family: var(--font-serif);
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  color: var(--navy);
+  text-transform: uppercase;
+}
+
+.links {
+  display: flex;
+  list-style: none;
+  gap: 2.5rem;
+}
+
+.links a {
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-mid);
+  transition: color 0.2s;
+}
+
+.links a:hover {
+  color: var(--navy);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.iconBtn {
+  background: none;
+  border: none;
+  color: var(--text-mid);
+  display: flex;
+  align-items: center;
+  position: relative;
+  transition: color 0.2s;
+}
+
+.iconBtn:hover {
+  color: var(--navy);
+}
+
+.badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: var(--navy);
+  color: var(--cream);
+  font-size: 9px;
+  font-weight: 500;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Hamburger — hidden on desktop */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  padding: 4px;
+}
+
+.hamburger span {
+  display: block;
+  width: 22px;
+  height: 1.5px;
+  background: var(--navy);
+  transition: all 0.2s;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .nav {
+    padding: 0 1.5rem;
+  }
+
+  .links {
+    display: none;
+    position: absolute;
+    top: 72px;
+    left: 0;
+    right: 0;
+    background: var(--white);
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    border-bottom: 1px solid var(--taupe-light);
+    padding: 1rem 0;
+  }
+
+  .links.open {
+    display: flex;
+  }
+
+  .links li {
+    width: 100%;
+    text-align: center;
+    padding: 0.75rem 0;
+  }
+
+  .hamburger {
+    display: flex;
+  }
+}

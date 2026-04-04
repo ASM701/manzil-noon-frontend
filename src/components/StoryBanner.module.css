@@ -1,0 +1,58 @@
+.banner {
+  background: var(--navy);
+  padding: 5rem 3rem;
+  text-align: center;
+}
+
+.eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--taupe);
+  margin-bottom: 1.2rem;
+}
+
+.title {
+  font-family: var(--font-serif);
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  font-weight: 300;
+  color: var(--cream);
+  margin-bottom: 1.5rem;
+  line-height: 1.2;
+}
+
+.title em {
+  font-style: italic;
+}
+
+.body {
+  font-size: 14px;
+  font-weight: 300;
+  color: rgba(245, 240, 230, 0.7);
+  max-width: 480px;
+  margin: 0 auto 2.5rem;
+  line-height: 1.8;
+}
+
+.btn {
+  background: none;
+  color: var(--cream);
+  border: 1px solid var(--taupe);
+  padding: 12px 32px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  transition: all 0.25s;
+}
+
+.btn:hover {
+  background: var(--taupe);
+  color: var(--navy);
+}
+
+@media (max-width: 768px) {
+  .banner {
+    padding: 3rem 1.5rem;
+  }
+}
