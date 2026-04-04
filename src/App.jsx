@@ -1,17 +1,30 @@
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import ProductGrid from './components/ProductGrid'
 import StoryBanner from './components/StoryBanner'
 import Footer from './components/Footer'
+import ProductDetailPage from './pages/ProductDetailPage'
 
-export default function App() {
+function HomePage() {
   return (
     <>
-      <Navbar />
       <Hero />
       <ProductGrid />
       <StoryBanner />
-      <Footer />
     </>
+  )
+}
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/product/:id" element={<ProductDetailPage />} />
+      </Routes>
+      <Footer />
+    </BrowserRouter>
   )
 }

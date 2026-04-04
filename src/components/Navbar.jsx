@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import LogoMark from './LogoMark'
 import styles from './Navbar.module.css'
 
@@ -7,16 +8,16 @@ export default function Navbar({ cartCount = 0 }) {
 
   return (
     <nav className={styles.nav}>
-      <a href="#" className={styles.logo}>
+      <Link to="/" className={styles.logo}>
         <LogoMark size={36} />
         <span className={styles.brandName}>Manzil Noon</span>
-      </a>
+      </Link>
 
       <ul className={`${styles.links} ${menuOpen ? styles.open : ''}`}>
-        <li><a href="#">New In</a></li>
-        <li><a href="#">Collections</a></li>
-        <li><a href="#">About</a></li>
-        <li><a href="#">Contact</a></li>
+        <li><Link to="/">New In</Link></li>
+        <li><Link to="/">Collections</Link></li>
+        <li><Link to="/">About</Link></li>
+        <li><Link to="/">Contact</Link></li>
       </ul>
 
       <div className={styles.actions}>
@@ -39,7 +40,6 @@ export default function Navbar({ cartCount = 0 }) {
           {cartCount > 0 && <span className={styles.badge}>{cartCount}</span>}
         </button>
 
-        {/* Mobile hamburger */}
         <button
           className={styles.hamburger}
           onClick={() => setMenuOpen(!menuOpen)}

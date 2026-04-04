@@ -1,14 +1,16 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import styles from './ProductCard.module.css'
 
 export default function ProductCard({ product }) {
   const [activeVariant, setActiveVariant] = useState(0)
   const [wishlisted, setWishlisted] = useState(false)
+  const navigate = useNavigate()
 
   const variant = product.variants[activeVariant]
 
   return (
-    <div className={styles.card}>
+    <div className={styles.card} onClick={() => navigate(`/product/${product.id}`)}>
       <div className={styles.imgWrap}>
         <img src={variant.img} alt={`${product.name} - ${variant.label}`} loading="lazy" />
 
@@ -18,7 +20,7 @@ export default function ProductCard({ product }) {
 
         <button
           className={`${styles.wishlist} ${wishlisted ? styles.wishlisted : ''}`}
-          onClick={() => setWishlisted(!wishlisted)}
+          onClick={(e) => { e.stopPropagation(); setWishlisted(!wishlisted) }}
           aria-label="Add to wishlist"
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill={wishlisted ? '#16166B' : 'none'} stroke="#16166B" strokeWidth="1.5">
@@ -27,7 +29,12 @@ export default function ProductCard({ product }) {
         </button>
 
         <div className={styles.overlay}>
-          <button className={styles.addBtn}>Add to Bag</button>
+          <button
+            className={styles.addBtn}
+            onClick={(e) => { e.stopPropagation(); navigate(`/product/${product.id}`) }}
+          >
+            View Product
+          </button>
         </div>
       </div>
 
@@ -43,7 +50,7 @@ export default function ProductCard({ product }) {
               key={i}
               className={`${styles.swatch} ${i === activeVariant ? styles.swatchActive : ''}`}
               style={{ background: v.swatch }}
-              onClick={() => setActiveVariant(i)}
+              onClick={(e) => { e.stopPropagation(); setActiveVariant(i) }}
               title={v.label}
               aria-label={v.label}
             />
