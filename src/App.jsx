@@ -5,6 +5,7 @@ import ProductGrid from './components/ProductGrid'
 import StoryBanner from './components/StoryBanner'
 import Footer from './components/Footer'
 import ProductDetailPage from './pages/ProductDetailPage'
+import AboutPage from './pages/AboutPage'
 
 function HomePage() {
   return (
@@ -23,6 +24,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/product/:id" element={<ProductDetailPage />} />
+        <Route path="/about" element={<AboutPage />} />
       </Routes>
       <Footer />
     </BrowserRouter>

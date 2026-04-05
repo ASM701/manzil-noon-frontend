@@ -16,7 +16,7 @@ export default function Navbar({ cartCount = 0 }) {
       <ul className={`${styles.links} ${menuOpen ? styles.open : ''}`}>
         <li><Link to="/">New In</Link></li>
         <li><Link to="/">Collections</Link></li>
-        <li><Link to="/">About</Link></li>
+        <li><Link to="/about">About</Link></li>
         <li><Link to="/">Contact</Link></li>
       </ul>
 
