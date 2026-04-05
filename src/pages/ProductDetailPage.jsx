@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { products } from '../data/products'
+import { useCart } from '../context/CartContext'
 import styles from './ProductDetailPage.module.css'
 
 const SIZES = ['XS', 'S', 'M', 'L', 'XL']
@@ -12,6 +13,7 @@ export default function ProductDetailPage() {
 
   const [activeVariant, setActiveVariant] = useState(0)
   const [activeSize, setActiveSize] = useState(null)
+  const { addItem } = useCart()
   
   useEffect(() => {
   window.scrollTo(0, 0)
@@ -113,7 +115,10 @@ export default function ProductDetailPage() {
 
           {/* Actions */}
           <div className={styles.actions}>
-            <button className={styles.addBtn}>
+            <button 
+              className={styles.addBtn}
+              onClick={() => addItem(product, variant, activeSize)}
+            >
               Add to Bag
             </button>
             <button className={styles.wishlistBtn}>
