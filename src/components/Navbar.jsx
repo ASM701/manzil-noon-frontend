@@ -17,7 +17,7 @@ export default function Navbar({ cartCount = 0 }) {
         <li><Link to="/">New In</Link></li>
         <li><Link to="/">Collections</Link></li>
         <li><Link to="/about">About</Link></li>
-        <li><Link to="/">Contact</Link></li>
+        <li><Link to="/contact">Contact</Link></li>
       </ul>
 
       <div className={styles.actions}>
