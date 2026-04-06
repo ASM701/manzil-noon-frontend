@@ -26,8 +26,6 @@ export default function Navbar() {
       </ul>
 
       <div className={styles.actions}>
-        
-
         <button
           className={styles.iconBtn}
           aria-label="Wishlist"
