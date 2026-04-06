@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { CartProvider } from './context/CartContext'
+import { WishlistProvider } from './context/WishlistContext'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import ProductGrid from './components/ProductGrid'
@@ -9,6 +10,7 @@ import CartSidebar from './components/CartSidebar'
 import ProductDetailPage from './pages/ProductDetailPage'
 import AboutPage from './pages/AboutPage'
 import ContactPage from './pages/ContactPage'
+import WishlistPage from './pages/WishlistPage'
 
 function HomePage() {
   return (
@@ -23,17 +25,20 @@ function HomePage() {
 export default function App() {
   return (
     <BrowserRouter>
-      <CartProvider>
-        <Navbar />
-        <CartSidebar />
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/product/:id" element={<ProductDetailPage />} />
-          <Route path="/about" element={<AboutPage />} />
-          <Route path="/contact" element={<ContactPage />} />
-        </Routes>
-        <Footer />
-      </CartProvider>
+      <WishlistProvider>
+        <CartProvider>
+          <Navbar />
+          <CartSidebar />
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/product/:id" element={<ProductDetailPage />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/contact" element={<ContactPage />} />
+            <Route path="/wishlist" element={<WishlistPage />} />
+          </Routes>
+          <Footer />
+        </CartProvider>
+      </WishlistProvider>
     </BrowserRouter>
   )
 }

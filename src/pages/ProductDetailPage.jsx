@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { products } from '../data/products'
 import { useCart } from '../context/CartContext'
+import { useWishlist } from '../context/WishlistContext'
 import styles from './ProductDetailPage.module.css'
 
 const SIZES = ['XS', 'S', 'M', 'L', 'XL']
@@ -13,10 +14,12 @@ export default function ProductDetailPage() {
 
   const [activeVariant, setActiveVariant] = useState(0)
   const [activeSize, setActiveSize] = useState(null)
+
   const { addItem } = useCart()
-  
+  const { toggleWishlist, isWishlisted } = useWishlist()
+
   useEffect(() => {
-  window.scrollTo(0, 0)
+    window.scrollTo(0, 0)
   }, [])
 
   if (!product) {
@@ -29,6 +32,7 @@ export default function ProductDetailPage() {
   }
 
   const variant = product.variants[activeVariant]
+  const wishlisted = isWishlisted(product.id, variant.label)
 
   return (
     <div className={styles.page}>
@@ -121,8 +125,12 @@ export default function ProductDetailPage() {
             >
               Add to Bag
             </button>
-            <button className={styles.wishlistBtn}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+            <button
+              className={`${styles.wishlistBtn} ${wishlisted ? styles.wishlistBtnActive : ''}`}
+              onClick={() => toggleWishlist(product, variant)}
+              aria-label="Add to wishlist"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill={wishlisted ? '#16166B' : 'none'} stroke="#16166B" strokeWidth="1.5">
                 <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
               </svg>
             </button>

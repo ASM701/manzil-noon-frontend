@@ -1,13 +1,15 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useWishlist } from '../context/WishlistContext'
 import styles from './ProductCard.module.css'
 
 export default function ProductCard({ product }) {
   const [activeVariant, setActiveVariant] = useState(0)
-  const [wishlisted, setWishlisted] = useState(false)
   const navigate = useNavigate()
+  const { toggleWishlist, isWishlisted } = useWishlist()
 
   const variant = product.variants[activeVariant]
+  const wishlisted = isWishlisted(product.id, variant.label)
 
   return (
     <div className={styles.card} onClick={() => navigate(`/product/${product.id}`)}>
@@ -20,7 +22,7 @@ export default function ProductCard({ product }) {
 
         <button
           className={`${styles.wishlist} ${wishlisted ? styles.wishlisted : ''}`}
-          onClick={(e) => { e.stopPropagation(); setWishlisted(!wishlisted) }}
+          onClick={(e) => { e.stopPropagation(); toggleWishlist(product, variant) }}
           aria-label="Add to wishlist"
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill={wishlisted ? '#16166B' : 'none'} stroke="#16166B" strokeWidth="1.5">

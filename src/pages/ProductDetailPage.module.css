@@ -258,6 +258,11 @@
   cursor: pointer;
 }
 
+.wishlistBtnActive {
+  border-color: var(--navy);
+  color: var(--navy);
+}
+
 /* ── Mobile ── */
 
 @media (max-width: 768px) {
