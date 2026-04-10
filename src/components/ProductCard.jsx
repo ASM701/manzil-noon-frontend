@@ -8,7 +8,11 @@ export default function ProductCard({ product }) {
   const navigate = useNavigate()
   const { toggleWishlist, isWishlisted } = useWishlist()
 
-  const variant = product.variants[activeVariant]
+  const variants = product.product_variants || []
+  const variant = variants[activeVariant]
+
+  if (!variant) return null
+
   const wishlisted = isWishlisted(product.id, variant.label)
 
   return (
@@ -45,9 +49,9 @@ export default function ProductCard({ product }) {
       <p className={styles.variantLabel}>{variant.label}</p>
       <p className={styles.price}>{product.price}</p>
 
-      {product.variants.length > 1 && (
+      {variants.length > 1 && (
         <div className={styles.swatches}>
-          {product.variants.map((v, i) => (
+          {variants.map((v, i) => (
             <button
               key={i}
               className={`${styles.swatch} ${i === activeVariant ? styles.swatchActive : ''}`}

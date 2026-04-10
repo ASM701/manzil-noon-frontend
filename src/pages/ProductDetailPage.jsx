@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { products } from '../data/products'
+import { getProduct } from '../lib/api'
 import { useCart } from '../context/CartContext'
 import { useWishlist } from '../context/WishlistContext'
 import styles from './ProductDetailPage.module.css'
@@ -10,8 +10,9 @@ const SIZES = ['XS', 'S', 'M', 'L', 'XL']
 export default function ProductDetailPage() {
   const { id } = useParams()
   const navigate = useNavigate()
-  const product = products.find(p => p.id === Number(id))
 
+  const [product, setProduct] = useState(null)
+  const [loading, setLoading] = useState(true)
   const [activeVariant, setActiveVariant] = useState(0)
   const [activeSize, setActiveSize] = useState(null)
 
@@ -20,7 +21,17 @@ export default function ProductDetailPage() {
 
   useEffect(() => {
     window.scrollTo(0, 0)
-  }, [])
+    getProduct(id)
+      .then(data => {
+        setProduct(data)
+        setLoading(false)
+      })
+      .catch(() => setLoading(false))
+  }, [id])
+
+  if (loading) {
+    return <div className={styles.notFound}><p>Loading...</p></div>
+  }
 
   if (!product) {
     return (
@@ -31,13 +42,12 @@ export default function ProductDetailPage() {
     )
   }
 
-  const variant = product.variants[activeVariant]
-  const wishlisted = isWishlisted(product.id, variant.label)
+  const variants = product.product_variants || []
+  const variant = variants[activeVariant]
+  const wishlisted = isWishlisted(product.id, variant?.label)
 
   return (
     <div className={styles.page}>
-
-      {/* Back button */}
       <button className={styles.back} onClick={() => navigate(-1)}>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
           <path d="M19 12H5M12 5l-7 7 7 7" />
@@ -46,20 +56,14 @@ export default function ProductDetailPage() {
       </button>
 
       <div className={styles.layout}>
-
-        {/* Left — image */}
         <div className={styles.imageSection}>
           <div className={styles.imgWrap}>
-            <img
-              src={variant.img}
-              alt={`${product.name} - ${variant.label}`}
-            />
+            <img src={variant?.img} alt={`${product.name} - ${variant?.label}`} />
           </div>
 
-          {/* Variant thumbnails */}
-          {product.variants.length > 1 && (
+          {variants.length > 1 && (
             <div className={styles.thumbnails}>
-              {product.variants.map((v, i) => (
+              {variants.map((v, i) => (
                 <button
                   key={i}
                   className={`${styles.thumb} ${i === activeVariant ? styles.thumbActive : ''}`}
@@ -72,19 +76,17 @@ export default function ProductDetailPage() {
           )}
         </div>
 
-        {/* Right — details */}
         <div className={styles.details}>
           <p className={styles.category}>{product.category}</p>
           <h1 className={styles.name}>{product.name}</h1>
           <p className={styles.price}>{product.price}</p>
 
-          {/* Color swatches */}
           <div className={styles.section}>
             <p className={styles.label}>
-              Color — <span className={styles.variantLabel}>{variant.label}</span>
+              Color — <span className={styles.variantLabel}>{variant?.label}</span>
             </p>
             <div className={styles.swatches}>
-              {product.variants.map((v, i) => (
+              {variants.map((v, i) => (
                 <button
                   key={i}
                   className={`${styles.swatch} ${i === activeVariant ? styles.swatchActive : ''}`}
@@ -96,7 +98,6 @@ export default function ProductDetailPage() {
             </div>
           </div>
 
-          {/* Size selector */}
           <div className={styles.section}>
             <p className={styles.label}>Size</p>
             <div className={styles.sizes}>
@@ -112,14 +113,12 @@ export default function ProductDetailPage() {
             </div>
           </div>
 
-          {/* Note for products with two outfits per image */}
           {product.note && (
             <p className={styles.note}>* {product.note}</p>
           )}
 
-          {/* Actions */}
           <div className={styles.actions}>
-            <button 
+            <button
               className={styles.addBtn}
               onClick={() => addItem(product, variant, activeSize)}
             >
@@ -136,7 +135,6 @@ export default function ProductDetailPage() {
             </button>
           </div>
         </div>
-
       </div>
     </div>
   )
