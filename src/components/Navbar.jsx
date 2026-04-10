@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useCart } from '../context/CartContext'
 import { useWishlist } from '../context/WishlistContext'
+import { useAuth } from '../context/AuthContext'
 import LogoMark from './LogoMark'
 import styles from './Navbar.module.css'
 
@@ -9,7 +10,13 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
   const { totalItems, setIsOpen } = useCart()
   const { totalItems: wishlistCount } = useWishlist()
+  const { user, logout } = useAuth()
   const navigate = useNavigate()
+
+  async function handleLogout() {
+    await logout()
+    navigate('/')
+  }
 
   return (
     <nav className={styles.nav}>
@@ -26,6 +33,12 @@ export default function Navbar() {
       </ul>
 
       <div className={styles.actions}>
+        <button className={styles.iconBtn} aria-label="Search">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+            <circle cx="11" cy="11" r="8" /><path d="M21 21l-4.35-4.35" />
+          </svg>
+        </button>
+
         <button
           className={styles.iconBtn}
           aria-label="Wishlist"
@@ -49,6 +62,16 @@ export default function Navbar() {
           </svg>
           {totalItems > 0 && <span className={styles.badge}>{totalItems}</span>}
         </button>
+
+        {user ? (
+          <button className={styles.authBtn} onClick={handleLogout}>
+            Sign Out
+          </button>
+        ) : (
+          <Link to="/login" className={styles.authBtn}>
+            Sign In
+          </Link>
+        )}
 
         <button
           className={styles.hamburger}
