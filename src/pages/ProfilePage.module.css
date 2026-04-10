@@ -1,0 +1,425 @@
+.page {
+  overflow-x: hidden;
+}
+
+/* ── Header ── */
+
+.header {
+  background: var(--navy);
+  padding: 7rem 3rem 6rem;
+  text-align: center;
+}
+
+.eyebrow {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--taupe);
+  margin-bottom: 1.2rem;
+}
+
+.title {
+  font-family: var(--font-serif);
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 300;
+  color: var(--cream);
+  margin-bottom: 0.6rem;
+}
+
+.email {
+  font-size: 13px;
+  font-weight: 300;
+  color: rgba(245, 240, 230, 0.6);
+  letter-spacing: 0.08em;
+}
+
+/* ── Tabs ── */
+
+.tabs {
+  display: flex;
+  align-items: center;
+  padding: 0 3rem;
+  border-bottom: 1px solid var(--taupe-light);
+}
+
+.tab {
+  background: none;
+  border: none;
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-mid);
+  padding: 1rem 1.8rem;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.tab:hover {
+  color: var(--navy);
+}
+
+.tabActive {
+  color: var(--navy);
+  border-bottom: 2px solid var(--navy);
+  font-weight: 500;
+}
+
+/* ── Content ── */
+
+.content {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 3rem 3rem 6rem;
+}
+
+.loadingWrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  font-size: 14px;
+  color: var(--text-mid);
+}
+
+/* ── Profile section ── */
+
+.profileSection {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.sectionTitle {
+  font-family: var(--font-serif);
+  font-size: 1.6rem;
+  font-weight: 300;
+  color: var(--navy);
+  margin-bottom: 1.5rem;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.label {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-dark);
+}
+
+.input {
+  background: var(--white);
+  border: 1px solid var(--taupe-light);
+  padding: 12px 14px;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--text-dark);
+  outline: none;
+  transition: border-color 0.2s;
+  border-radius: 0;
+  width: 100%;
+}
+
+.input:focus {
+  border-color: var(--navy);
+}
+
+.input:disabled {
+  background: var(--cream);
+  color: var(--text-mid);
+  cursor: not-allowed;
+}
+
+.textarea {
+  background: var(--white);
+  border: 1px solid var(--taupe-light);
+  padding: 12px 14px;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--text-dark);
+  outline: none;
+  transition: border-color 0.2s;
+  border-radius: 0;
+  resize: vertical;
+  width: 100%;
+}
+
+.textarea:focus {
+  border-color: var(--navy);
+}
+
+.hint {
+  font-size: 11px;
+  color: var(--taupe);
+  font-weight: 300;
+}
+
+.error {
+  font-size: 13px;
+  color: #a63232;
+  background: #fdf0f0;
+  border: 1px solid #f5c4c4;
+  padding: 10px 14px;
+  text-align: center;
+}
+
+.successMsg {
+  font-size: 13px;
+  color: #2d7a4f;
+  background: #f0faf4;
+  border: 1px solid #b4dfc7;
+  padding: 10px 14px;
+  text-align: center;
+}
+
+.saveBtn {
+  background: var(--navy);
+  color: var(--cream);
+  border: none;
+  padding: 15px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.25s;
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+.saveBtn:hover {
+  background: var(--navy-light);
+}
+
+.saveBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.logoutBtn {
+  background: none;
+  border: 1px solid var(--taupe-light);
+  padding: 13px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-mid);
+  transition: all 0.2s;
+  width: 100%;
+}
+
+.logoutBtn:hover {
+  border-color: #a63232;
+  color: #a63232;
+}
+
+/* ── Orders section ── */
+
+.ordersSection {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.emptyOrders {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 4rem 0;
+  text-align: center;
+}
+
+.emptyText {
+  font-size: 14px;
+  color: var(--text-mid);
+  font-weight: 300;
+}
+
+.shopBtn {
+  background: var(--navy);
+  color: var(--cream);
+  border: none;
+  padding: 13px 36px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  transition: background 0.25s;
+}
+
+.shopBtn:hover {
+  background: var(--navy-light);
+}
+
+.ordersList {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.orderCard {
+  border: 1px solid var(--taupe-light);
+  background: var(--white);
+}
+
+.orderHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 1.2rem 1.5rem;
+  border-bottom: 1px solid var(--taupe-light);
+}
+
+.orderId {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--navy);
+  letter-spacing: 0.08em;
+  margin-bottom: 4px;
+}
+
+.orderDate {
+  font-size: 12px;
+  color: var(--text-mid);
+  font-weight: 300;
+}
+
+.orderRight {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.orderStatus {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+}
+
+.pending {
+  background: #faeeda;
+  color: #854f0b;
+}
+
+.confirmed {
+  background: #e1f5ee;
+  color: #0f6e56;
+}
+
+.shipped {
+  background: #e6f1fb;
+  color: #185fa5;
+}
+
+.delivered {
+  background: #eaf3de;
+  color: #3b6d11;
+}
+
+.cancelled {
+  background: #fcebeb;
+  color: #a32d2d;
+}
+
+.orderTotal {
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  font-weight: 400;
+  color: var(--navy);
+}
+
+.orderItems {
+  padding: 1rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.orderItem {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.orderItemImg {
+  width: 60px;
+  height: 75px;
+  object-fit: cover;
+  background: var(--cream);
+  flex-shrink: 0;
+}
+
+.orderItemDetails {
+  flex: 1;
+}
+
+.orderItemName {
+  font-family: var(--font-serif);
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--text-dark);
+  margin-bottom: 4px;
+}
+
+.orderItemMeta {
+  font-size: 12px;
+  color: var(--text-mid);
+  font-weight: 300;
+  margin-bottom: 4px;
+}
+
+.orderItemPrice {
+  font-size: 13px;
+  color: var(--navy);
+  font-weight: 400;
+}
+
+/* ── Mobile ── */
+
+@media (max-width: 768px) {
+  .header {
+    padding: 5rem 1.5rem 4rem;
+  }
+
+  .tabs {
+    padding: 0 1.5rem;
+  }
+
+  .content {
+    padding: 2.5rem 1.5rem 4rem;
+  }
+
+  .orderHeader {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .orderRight {
+    align-items: flex-start;
+    flex-direction: row;
+    gap: 1rem;
+  }
+}

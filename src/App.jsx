@@ -14,6 +14,7 @@ import ContactPage from './pages/ContactPage'
 import WishlistPage from './pages/WishlistPage'
 import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
+import ProfilePage from './pages/ProfilePage'
 
 function HomePage() {
   return (
@@ -41,6 +42,7 @@ export default function App() {
               <Route path="/wishlist" element={<WishlistPage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
+              <Route path="/profile" element={<ProfilePage />} />
             </Routes>
             <Footer />
           </CartProvider>

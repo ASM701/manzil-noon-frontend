@@ -64,14 +64,21 @@ export default function Navbar() {
         </button>
 
         {user ? (
-          <button className={styles.authBtn} onClick={handleLogout}>
-            Sign Out
-          </button>
+          <div className={styles.userMenu}>
+            <Link to="/profile" className={styles.authBtn}>
+              {user.user_metadata?.full_name?.split(' ')[0] || 'Account'}
+            </Link>
+            <button className={styles.authBtn} onClick={handleLogout}>
+              Sign Out
+            </button>
+          </div>
         ) : (
           <Link to="/login" className={styles.authBtn}>
             Sign In
           </Link>
         )}
+
+
 
         <button
           className={styles.hamburger}
