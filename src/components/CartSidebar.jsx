@@ -1,8 +1,10 @@
+import { useNavigate } from 'react-router-dom'
 import { useCart } from '../context/CartContext'
 import styles from './CartSidebar.module.css'
 
 export default function CartSidebar() {
   const { items, isOpen, setIsOpen, removeItem, updateQuantity } = useCart()
+  const navigate = useNavigate()
 
   const subtotal = items.reduce((sum, item) => {
     const price = parseFloat(item.price.replace('KD ', ''))
@@ -99,7 +101,10 @@ export default function CartSidebar() {
             <p className={styles.shippingNote}>
               Shipping calculated at checkout
             </p>
-            <button className={styles.checkoutBtn}>
+            <button 
+              className={styles.checkoutBtn}
+              onClick={() => { setIsOpen(false); navigate('/checkout') }}
+            >
               Proceed to Checkout
             </button>
           </div>
