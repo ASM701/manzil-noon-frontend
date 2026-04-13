@@ -4,6 +4,7 @@ import { getProduct } from '../lib/api'
 import { useCart } from '../context/CartContext'
 import { useWishlist } from '../context/WishlistContext'
 import styles from './ProductDetailPage.module.css'
+import { useAuth } from '../context/AuthContext'
 
 const SIZES = ['XS', 'S', 'M', 'L', 'XL']
 
@@ -15,6 +16,7 @@ export default function ProductDetailPage() {
   const [loading, setLoading] = useState(true)
   const [activeVariant, setActiveVariant] = useState(0)
   const [activeSize, setActiveSize] = useState(null)
+  const { user } = useAuth()
 
   const { addItem } = useCart()
   const { toggleWishlist, isWishlisted } = useWishlist()
@@ -120,7 +122,13 @@ export default function ProductDetailPage() {
           <div className={styles.actions}>
             <button
               className={styles.addBtn}
-              onClick={() => addItem(product, variant, activeSize)}
+              onClick={() => {
+                if (!user) {
+                  navigate('/login')
+                  return
+                }
+                addItem(product, variant, activeSize)
+              }}
             >
               Add to Bag
             </button>

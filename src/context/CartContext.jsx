@@ -8,6 +8,7 @@ export function CartProvider({ children }) {
   const [items, setItems] = useState([])
   const [isOpen, setIsOpen] = useState(false)
   const { user, token } = useAuth()
+  
 
   // Load cart from database when user logs in
   useEffect(() => {
@@ -38,11 +39,12 @@ export function CartProvider({ children }) {
   }, [user, token])
 
   async function addItem(product, variant, size) {
-    const existing = items.find(
-      item =>
-        item.productId === product.id &&
-        item.variantLabel === variant.label &&
-        item.size === (size || '')
+    if (!user) return
+      const existing = items.find(
+        item =>
+          item.productId === product.id &&
+          item.variantLabel === variant.label &&
+          item.size === (size || '')
     )
 
     if (existing) {

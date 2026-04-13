@@ -36,11 +36,15 @@ export function WishlistProvider({ children }) {
   }, [user, token])
 
   async function toggleWishlist(product, variant) {
-    const existing = items.find(
-      item =>
-        item.productId === product.id &&
-        item.variantLabel === variant.label
-    )
+  if (!user) {
+    window.location.href = '/login'
+    return
+  }
+  const existing = items.find(
+    item =>
+      item.productId === product.id &&
+      item.variantLabel === variant.label
+  )
 
     if (existing) {
       // Remove from state immediately
