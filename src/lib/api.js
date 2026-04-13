@@ -190,3 +190,25 @@ export async function clearCart(token) {
   if (!res.ok) throw new Error('Failed to clear cart')
   return res.json()
 }
+
+// ── Admin ──
+export async function getAdminOrders(token) {
+  const res = await fetch(`${BASE_URL}/api/admin/orders`, {
+    headers: { Authorization: `Bearer ${token}` }
+  })
+  if (!res.ok) throw new Error('Failed to fetch orders')
+  return res.json()
+}
+
+export async function updateOrderStatus(token, id, status) {
+  const res = await fetch(`${BASE_URL}/api/admin/orders/${id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`
+    },
+    body: JSON.stringify({ status })
+  })
+  if (!res.ok) throw new Error('Failed to update order status')
+  return res.json()
+}

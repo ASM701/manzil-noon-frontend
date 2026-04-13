@@ -17,6 +17,7 @@ import RegisterPage from './pages/RegisterPage'
 import ProfilePage from './pages/ProfilePage'
 import CheckoutPage from './pages/CheckoutPage'
 import OrderSuccessPage from './pages/OrderSuccessPage'
+import AdminPage from './pages/AdminPage'
 
 function HomePage() {
   return (
@@ -47,6 +48,7 @@ export default function App() {
               <Route path="/profile" element={<ProfilePage />} />
               <Route path="/checkout" element={<CheckoutPage />} />
               <Route path="/order-success" element={<OrderSuccessPage />} />
+              <Route path="/admin" element={<AdminPage />} />
             </Routes>
             <Footer />
           </CartProvider>

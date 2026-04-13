@@ -1,17 +1,29 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useCart } from '../context/CartContext'
 import { useWishlist } from '../context/WishlistContext'
 import { useAuth } from '../context/AuthContext'
 import LogoMark from './LogoMark'
 import styles from './Navbar.module.css'
+import { getProfile } from '../lib/api'
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
   const { totalItems, setIsOpen } = useCart()
   const { totalItems: wishlistCount } = useWishlist()
-  const { user, logout } = useAuth()
+  const { user, logout, token } = useAuth()
   const navigate = useNavigate()
+  const [isAdmin, setIsAdmin] = useState(false)
+
+  useEffect(() => {
+    if (user && token) {
+      getProfile(token)
+        .then(profile => setIsAdmin(profile.is_admin || false))
+        .catch(() => setIsAdmin(false))
+    } else {
+      setIsAdmin(false)
+    }
+  }, [user, token])
 
   async function handleLogout() {
     await logout()
@@ -65,6 +77,11 @@ export default function Navbar() {
 
         {user ? (
           <div className={styles.userMenu}>
+            {isAdmin && (
+              <Link to="/admin" className={styles.adminBtn}>
+                Admin
+              </Link>
+            )}
             <Link to="/profile" className={styles.authBtn}>
               {user.user_metadata?.full_name?.split(' ')[0] || 'Account'}
             </Link>
