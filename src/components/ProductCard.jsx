@@ -23,6 +23,9 @@ export default function ProductCard({ product }) {
         {product.badge && (
           <span className={styles.badge}>{product.badge}</span>
         )}
+        {variant.stock === 0 && (
+          <span className={styles.soldOut}>Sold Out</span>
+        )}
 
         <button
           className={`${styles.wishlist} ${wishlisted ? styles.wishlisted : ''}`}
@@ -35,12 +38,18 @@ export default function ProductCard({ product }) {
         </button>
 
         <div className={styles.overlay}>
-          <button
-            className={styles.addBtn}
-            onClick={(e) => { e.stopPropagation(); navigate(`/product/${product.id}`) }}
-          >
-            View Product
-          </button>
+          {variant.stock === 0 ? (
+            <button className={styles.soldOutBtn} disabled>
+              Sold Out
+            </button>
+          ) : (
+            <button
+              className={styles.addBtn}
+              onClick={(e) => { e.stopPropagation(); navigate(`/product/${product.id}`) }}
+            >
+              View Product
+            </button>
+          )}
         </div>
       </div>
 

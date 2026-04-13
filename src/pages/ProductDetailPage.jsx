@@ -122,6 +122,8 @@ export default function ProductDetailPage() {
           <div className={styles.actions}>
             <button
               className={styles.addBtn}
+              disabled={!variant || variant.stock === 0}
+              style={{ opacity: variant?.stock === 0 ? 0.6 : 1, cursor: variant?.stock === 0 ? 'not-allowed' : 'pointer' }}
               onClick={() => {
                 if (!user) {
                   navigate('/login')
@@ -130,7 +132,7 @@ export default function ProductDetailPage() {
                 addItem(product, variant, activeSize)
               }}
             >
-              Add to Bag
+              {variant?.stock === 0 ? 'Sold Out' : 'Add to Bag'}
             </button>
             <button
               className={`${styles.wishlistBtn} ${wishlisted ? styles.wishlistBtnActive : ''}`}
