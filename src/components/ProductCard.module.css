@@ -8,6 +8,7 @@
   background: var(--cream);
   aspect-ratio: 3 / 4;
   margin-bottom: 1rem;
+  object-fit: contain;
 }
 
 .imgWrap img {
@@ -15,6 +16,10 @@
   height: 100%;
   object-fit: cover;
   transition: transform 0.5s ease;
+}
+
+.imgWrap.imgWrapContain img {
+  object-fit: contain;
 }
 
 .card:hover .imgWrap img {

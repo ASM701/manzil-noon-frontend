@@ -17,7 +17,7 @@ export default function ProductCard({ product }) {
 
   return (
     <div className={styles.card} onClick={() => navigate(`/product/${product.id}`)}>
-      <div className={styles.imgWrap}>
+      <div className={`${styles.imgWrap} ${product.category === 'Bags' ? styles.imgWrapContain : ''}`}>
         <img src={variant.img} alt={`${product.name} - ${variant.label}`} loading="lazy" />
 
         {product.badge && (

@@ -88,9 +88,6 @@ export default function CheckoutPage() {
                       style={{ background: item.swatch }}
                     />
                     <span className={styles.itemVariant}>{item.variantLabel}</span>
-                    {item.size && (
-                      <span className={styles.itemSize}>· {item.size}</span>
-                    )}
                   </div>
                   <div className={styles.itemBottom}>
                     <span className={styles.itemQty}>Qty {item.quantity}</span>

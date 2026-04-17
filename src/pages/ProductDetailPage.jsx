@@ -6,8 +6,6 @@ import { useWishlist } from '../context/WishlistContext'
 import styles from './ProductDetailPage.module.css'
 import { useAuth } from '../context/AuthContext'
 
-const SIZES = ['XS', 'S', 'M', 'L', 'XL']
-
 export default function ProductDetailPage() {
   const { id } = useParams()
   const navigate = useNavigate()
@@ -15,7 +13,6 @@ export default function ProductDetailPage() {
   const [product, setProduct] = useState(null)
   const [loading, setLoading] = useState(true)
   const [activeVariant, setActiveVariant] = useState(0)
-  const [activeSize, setActiveSize] = useState(null)
   const { user } = useAuth()
 
   const { addItem } = useCart()
@@ -59,7 +56,7 @@ export default function ProductDetailPage() {
 
       <div className={styles.layout}>
         <div className={styles.imageSection}>
-          <div className={styles.imgWrap}>
+          <div className={`${styles.imgWrap} ${product.category === 'Bags' ? styles.imgWrapContain : ''}`}>
             <img src={variant?.img} alt={`${product.name} - ${variant?.label}`} />
           </div>
 
@@ -82,6 +79,9 @@ export default function ProductDetailPage() {
           <p className={styles.category}>{product.category}</p>
           <h1 className={styles.name}>{product.name}</h1>
           <p className={styles.price}>{product.price}</p>
+          {product.category !== 'Bags' && (
+            <p className={styles.includes}>✦ Includes matching slippers</p>
+          )}
 
           <div className={styles.section}>
             <p className={styles.label}>
@@ -100,20 +100,6 @@ export default function ProductDetailPage() {
             </div>
           </div>
 
-          <div className={styles.section}>
-            <p className={styles.label}>Size</p>
-            <div className={styles.sizes}>
-              {SIZES.map(size => (
-                <button
-                  key={size}
-                  className={`${styles.sizeBtn} ${activeSize === size ? styles.sizeBtnActive : ''}`}
-                  onClick={() => setActiveSize(size)}
-                >
-                  {size}
-                </button>
-              ))}
-            </div>
-          </div>
 
           {product.note && (
             <p className={styles.note}>* {product.note}</p>
@@ -129,7 +115,7 @@ export default function ProductDetailPage() {
                   navigate('/login')
                   return
                 }
-                addItem(product, variant, activeSize)
+                addItem(product, variant, null)
               }}
             >
               {variant?.stock === 0 ? 'Sold Out' : 'Add to Bag'}

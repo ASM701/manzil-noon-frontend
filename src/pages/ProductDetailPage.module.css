@@ -53,6 +53,10 @@
   transition: transform 0.5s ease;
 }
 
+.imgWrap.imgWrapContain img {
+  object-fit: contain;
+}
+
 .imgWrap:hover img {
   transform: scale(1.03);
 }
@@ -261,6 +265,14 @@
 .wishlistBtnActive {
   border-color: var(--navy);
   color: var(--navy);
+}
+
+.includes {
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--taupe);
+  letter-spacing: 0.08em;
+  margin-top: 4px;
 }
 
 /* ── Mobile ── */
