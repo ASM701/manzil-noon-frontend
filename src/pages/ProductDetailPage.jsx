@@ -1,32 +1,71 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { getProduct } from '../lib/api'
+import { getProduct, getProducts } from '../lib/api'
 import { useCart } from '../context/CartContext'
 import { useWishlist } from '../context/WishlistContext'
-import styles from './ProductDetailPage.module.css'
 import { useAuth } from '../context/AuthContext'
+import styles from './ProductDetailPage.module.css'
 
 export default function ProductDetailPage() {
   const { id } = useParams()
   const navigate = useNavigate()
-
   const [product, setProduct] = useState(null)
   const [loading, setLoading] = useState(true)
   const [activeVariant, setActiveVariant] = useState(0)
   const { user } = useAuth()
-
   const { addItem } = useCart()
   const { toggleWishlist, isWishlisted } = useWishlist()
+  const [includeSet, setIncludeSet] = useState(false)
+  const [matchingBag, setMatchingBag] = useState(null)
+  const [matchingBagVariant, setMatchingBagVariant] = useState(null)
+  const [activeSize, setActiveSize] = useState(null)
 
-  useEffect(() => {
-    window.scrollTo(0, 0)
-    getProduct(id)
-      .then(data => {
-        setProduct(data)
-        setLoading(false)
-      })
-      .catch(() => setLoading(false))
-  }, [id])
+  
+useEffect(() => {
+  window.scrollTo(0, 0)
+  getProduct(id)
+    .then(data => {
+      setProduct(data)
+      setLoading(false)
+    })
+    .catch(() => setLoading(false))
+}, [id])
+
+async function findMatchingBag(variantLabel, productName) {
+  const isStarRobe = productName === 'Star Robe'
+  const isFlowerRobe = productName === 'Flower Robe'
+
+  if (!isStarRobe && !isFlowerRobe) return
+
+  const bagName = isStarRobe ? 'Star Bag' : 'Flower Bag'
+
+  try {
+    const allProducts = await getProducts()
+    const bag = allProducts.find(p => p.name === bagName)
+    if (!bag) return
+
+    const bagVariant = bag.product_variants?.find(
+      v => v.label === variantLabel
+    )
+
+    setMatchingBag(bag)
+    setMatchingBagVariant(bagVariant || null)
+  } catch (err) {
+    console.error('Failed to find matching bag:', err)
+  }
+}
+
+useEffect(() => {
+  if (product) {
+    const currentVariant = product.product_variants?.[activeVariant]
+    setIncludeSet(false)
+    setMatchingBag(null)
+    setMatchingBagVariant(null)
+    if (currentVariant) {
+      findMatchingBag(currentVariant.label, product.name)
+    }
+  }
+}, [product, activeVariant])
 
   if (loading) {
     return <div className={styles.notFound}><p>Loading...</p></div>
@@ -100,10 +139,60 @@ export default function ProductDetailPage() {
             </div>
           </div>
 
+          {product.name === 'Abaya Robe' && (
+            <div className={styles.section}>
+              <p className={styles.label}>
+                Size — <span className={styles.variantLabel}>{activeSize || 'Select a size'}</span>
+              </p>
+              <div className={styles.sizes}>
+                {['Long (Left)', 'Short (Right)'].map(size => (
+                  <button
+                    key={size}
+                    className={`${styles.sizeBtn} ${activeSize === size ? styles.sizeBtnActive : ''}`}
+                    onClick={() => setActiveSize(size)}
+                  >
+                    {size}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
 
           {product.note && (
             <p className={styles.note}>* {product.note}</p>
           )}
+
+          {matchingBag && matchingBagVariant && (
+              <div className={styles.completeSet}>
+                <div className={styles.setHeader}>
+                  <p className={styles.setTitle}>✦ Complete the Set</p>
+                  <p className={styles.setSubtitle}>
+                    Add the matching {matchingBag.name} to complete your look
+                  </p>
+                </div>
+                <div className={styles.setOption}>
+                  <div className={styles.setProduct}>
+                    <img
+                      src={matchingBagVariant.img}
+                      alt={matchingBag.name}
+                      className={styles.setBagImg}
+                    />
+                    <div className={styles.setProductInfo}>
+                      <p className={styles.setProductName}>{matchingBag.name}</p>
+                      <p className={styles.setProductVariant}>{matchingBagVariant.label}</p>
+                      <p className={styles.setProductPrice}>{matchingBag.price}</p>
+                    </div>
+                  </div>
+                  <button
+                    className={`${styles.setToggle} ${includeSet ? styles.setToggleActive : ''}`}
+                    onClick={() => setIncludeSet(!includeSet)}
+                  >
+                    {includeSet ? 'Added ✓' : 'Add to Set'}
+                  </button>
+                </div>
+              </div>
+            )}
 
           <div className={styles.actions}>
             <button
@@ -115,7 +204,10 @@ export default function ProductDetailPage() {
                   navigate('/login')
                   return
                 }
-                addItem(product, variant, null)
+                addItem(product, variant, product.name === 'Abaya Robe' ? activeSize : null)
+                if (includeSet && matchingBag && matchingBagVariant) {
+                  addItem(matchingBag, matchingBagVariant, null)
+                }
               }}
             >
               {variant?.stock === 0 ? 'Sold Out' : 'Add to Bag'}
