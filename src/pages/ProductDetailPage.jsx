@@ -20,52 +20,53 @@ export default function ProductDetailPage() {
   const [matchingBagVariant, setMatchingBagVariant] = useState(null)
   const [activeSize, setActiveSize] = useState(null)
 
-  
-useEffect(() => {
-  window.scrollTo(0, 0)
-  getProduct(id)
-    .then(data => {
-      setProduct(data)
-      setLoading(false)
-    })
-    .catch(() => setLoading(false))
-}, [id])
 
-async function findMatchingBag(variantLabel, productName) {
-  const isStarRobe = productName === 'Star Robe'
-  const isFlowerRobe = productName === 'Flower Robe'
+  useEffect(() => {
+    window.scrollTo(0, 0)
+    getProduct(id)
+      .then(data => {
+        setProduct(data)
+        setLoading(false)
+      })
+      .catch(() => setLoading(false))
+  }, [id])
 
-  if (!isStarRobe && !isFlowerRobe) return
+  async function findMatchingBag(variantLabel, productName) {
+    const isStarRobe = productName === 'Star Robe'
+    const isFlowerRobe = productName === 'Flower Robe'
 
-  const bagName = isStarRobe ? 'Star Bag' : 'Flower Bag'
+    if (!isStarRobe && !isFlowerRobe) return
 
-  try {
-    const allProducts = await getProducts()
-    const bag = allProducts.find(p => p.name === bagName)
-    if (!bag) return
+    const bagName = isStarRobe ? 'Star Bag' : 'Flower Bag'
 
-    const bagVariant = bag.product_variants?.find(
-      v => v.label === variantLabel
-    )
+    try {
+      const allProducts = await getProducts()
+      const bag = allProducts.find(p => p.name === bagName)
+      if (!bag) return
 
-    setMatchingBag(bag)
-    setMatchingBagVariant(bagVariant || null)
-  } catch (err) {
-    console.error('Failed to find matching bag:', err)
-  }
-}
+      const bagVariant = bag.product_variants?.find(
+        v => v.label === variantLabel
+      )
 
-useEffect(() => {
-  if (product) {
-    const currentVariant = product.product_variants?.[activeVariant]
-    setIncludeSet(false)
-    setMatchingBag(null)
-    setMatchingBagVariant(null)
-    if (currentVariant) {
-      findMatchingBag(currentVariant.label, product.name)
+      setMatchingBag(bag)
+      setMatchingBagVariant(bagVariant || null)
+    } catch (err) {
+      console.error('Failed to find matching bag:', err)
     }
   }
-}, [product, activeVariant])
+
+  useEffect(() => {
+    if (product) {
+      const currentVariant = product.product_variants?.[activeVariant]
+      setActiveSize(null)
+      setIncludeSet(false)
+      setMatchingBag(null)
+      setMatchingBagVariant(null)
+      if (currentVariant) {
+        findMatchingBag(currentVariant.label, product.name)
+      }
+    }
+  }, [product, activeVariant])
 
   if (loading) {
     return <div className={styles.notFound}><p>Loading...</p></div>
@@ -82,7 +83,11 @@ useEffect(() => {
 
   const variants = product.product_variants || []
   const variant = variants[activeVariant]
+  const sizes = variant?.product_variant_sizes || []
+  const selectedSize = sizes.find(s => s.label === activeSize)
   const wishlisted = isWishlisted(product.id, variant?.label)
+  const displayPrice = selectedSize ? selectedSize.price : product.price
+  const displayStock = selectedSize ? selectedSize.stock : sizes.length > 0 ? 999 : variant?.stock
 
   return (
     <div className={styles.page}>
@@ -117,10 +122,16 @@ useEffect(() => {
         <div className={styles.details}>
           <p className={styles.category}>{product.category}</p>
           <h1 className={styles.name}>{product.name}</h1>
-          <p className={styles.price}>{product.price}</p>
-          {product.category !== 'Bags' && (
-            <p className={styles.includes}>✦ Includes matching slippers</p>
+          <p className={styles.price}>{displayPrice}</p>
+          {product.name === 'Abaya Robe' ? (
+            <><><><p className={styles.includes}>✦ Includes matching slippers</p></><p className={styles.includes}>✦ Cotton</p></></>
+          ) : null}
+          {product.category !== 'Bags' && product.name !== 'Button Robe' && product.name !== 'Sai Robe' && product.name !== 'Abaya Robe' && (
+            <><><p className={styles.includes}>✦ Includes matching slippers</p><p className={styles.includes}>✦ Free Size</p></><p className={styles.includes}>✦ Cotton</p></>
           )}
+          {product.name === 'Button Robe' || product.name === 'Sai Robe' ? (
+            <><><><p className={styles.includes}>✦ Includes matching slippers</p><p className={styles.includes}>✦ Free Size</p></><p className={styles.includes}>✦ Cotton</p></><p className={styles.includes}>✦ Inner Dress</p></>
+          ) : null}
 
           <div className={styles.section}>
             <p className={styles.label}>
@@ -139,19 +150,20 @@ useEffect(() => {
             </div>
           </div>
 
-          {product.name === 'Abaya Robe' && (
+          {sizes.length > 0 && (
             <div className={styles.section}>
               <p className={styles.label}>
                 Size — <span className={styles.variantLabel}>{activeSize || 'Select a size'}</span>
               </p>
               <div className={styles.sizes}>
-                {['Long (Left)', 'Short (Right)'].map(size => (
+                {sizes.map(size => (
                   <button
-                    key={size}
-                    className={`${styles.sizeBtn} ${activeSize === size ? styles.sizeBtnActive : ''}`}
-                    onClick={() => setActiveSize(size)}
+                    key={size.id}
+                    className={`${styles.sizeBtn} ${activeSize === size.label ? styles.sizeBtnActive : ''} ${size.stock === 0 ? styles.sizeBtnSoldOut : ''}`}
+                    onClick={() => size.stock > 0 && setActiveSize(size.label)}
+                    disabled={size.stock === 0}
                   >
-                    {size}
+                    {size.label}
                   </button>
                 ))}
               </div>
@@ -164,53 +176,58 @@ useEffect(() => {
           )}
 
           {matchingBag && matchingBagVariant && (
-              <div className={styles.completeSet}>
-                <div className={styles.setHeader}>
-                  <p className={styles.setTitle}>✦ Complete the Set</p>
-                  <p className={styles.setSubtitle}>
-                    Add the matching {matchingBag.name} to complete your look
-                  </p>
-                </div>
-                <div className={styles.setOption}>
-                  <div className={styles.setProduct}>
-                    <img
-                      src={matchingBagVariant.img}
-                      alt={matchingBag.name}
-                      className={styles.setBagImg}
-                    />
-                    <div className={styles.setProductInfo}>
-                      <p className={styles.setProductName}>{matchingBag.name}</p>
-                      <p className={styles.setProductVariant}>{matchingBagVariant.label}</p>
-                      <p className={styles.setProductPrice}>{matchingBag.price}</p>
-                    </div>
-                  </div>
-                  <button
-                    className={`${styles.setToggle} ${includeSet ? styles.setToggleActive : ''}`}
-                    onClick={() => setIncludeSet(!includeSet)}
-                  >
-                    {includeSet ? 'Added ✓' : 'Add to Set'}
-                  </button>
-                </div>
+            <div className={styles.completeSet}>
+              <div className={styles.setHeader}>
+                <p className={styles.setTitle}>✦ Complete the Set</p>
+                <p className={styles.setSubtitle}>
+                  Add the matching {matchingBag.name} to complete your look with a discount
+                </p>
               </div>
-            )}
+              <div className={styles.setOption}>
+                <div className={styles.setProduct}>
+                  <img
+                    src={matchingBagVariant.img}
+                    alt={matchingBag.name}
+                    className={styles.setBagImg}
+                  />
+                  <div className={styles.setProductInfo}>
+                    <p className={styles.setProductName}>{matchingBag.name}</p>
+                    <p className={styles.setProductVariant}>{matchingBagVariant.label}</p>
+                    <p className={styles.setProductPrice}>{matchingBag.set_price || matchingBag.price}
+                    </p>
+                  </div>
+                </div>
+                <button
+                  className={`${styles.setToggle} ${includeSet ? styles.setToggleActive : ''}`}
+                  onClick={() => setIncludeSet(!includeSet)}
+                >
+                  {includeSet ? 'Added ✓' : 'Add to Set'}
+                </button>
+              </div>
+            </div>
+          )}
 
           <div className={styles.actions}>
             <button
               className={styles.addBtn}
-              disabled={!variant || variant.stock === 0}
-              style={{ opacity: variant?.stock === 0 ? 0.6 : 1, cursor: variant?.stock === 0 ? 'not-allowed' : 'pointer' }}
+              disabled={!variant || displayStock === 0 || (sizes.length > 0 && !activeSize)}
+              style={{
+                opacity: displayStock === 0 || (sizes.length > 0 && !activeSize) ? 0.6 : 1,
+                cursor: displayStock === 0 || (sizes.length > 0 && !activeSize) ? 'not-allowed' : 'pointer'
+              }}
               onClick={() => {
                 if (!user) {
                   navigate('/login')
                   return
                 }
-                addItem(product, variant, product.name === 'Abaya Robe' ? activeSize : null)
+                if (sizes.length > 0 && !activeSize) return
+                addItem(product, variant, activeSize, displayPrice)
                 if (includeSet && matchingBag && matchingBagVariant) {
-                  addItem(matchingBag, matchingBagVariant, null)
+                  addItem(matchingBag, matchingBagVariant, null, matchingBag.set_price || matchingBag.price)
                 }
               }}
             >
-              {variant?.stock === 0 ? 'Sold Out' : 'Add to Bag'}
+              {displayStock === 0 ? 'Sold Out' : sizes.length > 0 && !activeSize ? 'Select a Size' : 'Add to Bag'}
             </button>
             <button
               className={`${styles.wishlistBtn} ${wishlisted ? styles.wishlistBtnActive : ''}`}

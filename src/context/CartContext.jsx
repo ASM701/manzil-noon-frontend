@@ -8,7 +8,7 @@ export function CartProvider({ children }) {
   const [items, setItems] = useState([])
   const [isOpen, setIsOpen] = useState(false)
   const { user, token } = useAuth()
-  
+
 
   // Load cart from database when user logs in
   useEffect(() => {
@@ -38,14 +38,17 @@ export function CartProvider({ children }) {
     }
   }, [user, token])
 
-  async function addItem(product, variant, size) {
+  async function addItem(product, variant, size, overridePrice = null) {
     if (!user) return
-      const existing = items.find(
-        item =>
-          item.productId === product.id &&
-          item.variantLabel === variant.label &&
-          item.size === (size || '')
+
+    const existing = items.find(
+      item =>
+        item.productId === product.id &&
+        item.variantLabel === variant.label &&
+        item.size === (size || '')
     )
+
+    const itemPrice = overridePrice || product.price
 
     if (existing) {
       const newQty = existing.quantity + 1
@@ -65,7 +68,7 @@ export function CartProvider({ children }) {
       const newItem = {
         productId: product.id,
         name: product.name,
-        price: product.price,
+        price: itemPrice,
         variantLabel: variant.label,
         img: variant.img,
         swatch: variant.swatch,
@@ -85,13 +88,12 @@ export function CartProvider({ children }) {
             size || '',
             1
           )
-          // Update item with database id for future updates
           setItems(prev =>
             prev.map(item =>
               item.productId === product.id &&
-              item.variantLabel === variant.label &&
-              item.size === (size || '') &&
-              !item.id
+                item.variantLabel === variant.label &&
+                item.size === (size || '') &&
+                !item.id
                 ? { ...item, id: saved.id }
                 : item
             )

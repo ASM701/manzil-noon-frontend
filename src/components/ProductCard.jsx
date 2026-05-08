@@ -23,7 +23,7 @@ export default function ProductCard({ product }) {
         {product.badge && (
           <span className={styles.badge}>{product.badge}</span>
         )}
-        {variant.stock === 0 && (
+        {variant.stock === 0 && !variant.product_variant_sizes?.length && (
           <span className={styles.soldOut}>Sold Out</span>
         )}
 
@@ -38,7 +38,7 @@ export default function ProductCard({ product }) {
         </button>
 
         <div className={styles.overlay}>
-          {variant.stock === 0 ? (
+          {variant.stock === 0 && !variant.product_variant_sizes?.length ? (
             <button className={styles.soldOutBtn} disabled>
               Sold Out
             </button>

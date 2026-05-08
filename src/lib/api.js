@@ -225,3 +225,16 @@ export async function updateVariantStock(token, variantId, stock) {
   if (!res.ok) throw new Error('Failed to update stock')
   return res.json()
 }
+
+export async function updateSizeStock(token, sizeId, stock) {
+  const res = await fetch(`${BASE_URL}/api/admin/sizes/${sizeId}/stock`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`
+    },
+    body: JSON.stringify({ stock })
+  })
+  if (!res.ok) throw new Error('Failed to update size stock')
+  return res.json()
+}

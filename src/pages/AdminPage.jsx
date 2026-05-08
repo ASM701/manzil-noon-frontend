@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { getAdminOrders, updateOrderStatus, updateVariantStock } from '../lib/api'
+import { getAdminOrders, updateOrderStatus, updateVariantStock, updateSizeStock } from '../lib/api'
 import styles from './AdminPage.module.css'
 
 const STATUSES = ['pending', 'confirmed', 'shipped', 'delivered', 'cancelled']
@@ -53,6 +53,25 @@ export default function AdminPage() {
       console.error('Failed to update stock:', err)
     }
   }
+
+  async function handleSizeStockUpdate(sizeId, newStock) {
+  try {
+    await updateSizeStock(token, sizeId, newStock)
+    setProducts(prev =>
+      prev.map(p => ({
+        ...p,
+        product_variants: p.product_variants?.map(v => ({
+          ...v,
+          product_variant_sizes: v.product_variant_sizes?.map(s =>
+            s.id === sizeId ? { ...s, stock: newStock } : s
+          )
+        }))
+      }))
+    )
+  } catch (err) {
+    console.error('Failed to update size stock:', err)
+  }
+}
 
   async function fetchOrders() {
     try {
@@ -298,22 +317,23 @@ export default function AdminPage() {
         )}
 
         {/* Inventory Tab */}
-        {activeTab === 'inventory' && (
-          <div className={styles.inventorySection}>
-            <h2 className={styles.sectionTitle}>Stock Management</h2>
-            {products.map(product => (
-              <div key={product.id} className={styles.inventoryCard}>
-                <h3 className={styles.inventoryProductName}>{product.name}</h3>
-                <div className={styles.variantsList}>
-                  {product.product_variants?.map(variant => (
-                    <div key={variant.id} className={styles.variantRow}>
-                      <div className={styles.variantInfo}>
-                        <span
-                          className={styles.variantSwatch}
-                          style={{ background: variant.swatch }}
-                        />
-                        <span className={styles.variantLabel}>{variant.label}</span>
-                      </div>
+        {activeTab === 'inventory' && products.map(product => (
+          <div key={product.id} className={styles.inventoryCard}>
+            <h3 className={styles.inventoryProductName}>{product.name}</h3>
+            <div className={styles.variantsList}>
+              {product.product_variants?.map(variant => (
+                <div key={variant.id}>
+                  <div className={styles.variantRow}>
+                    <div className={styles.variantInfo}>
+                      <span
+                        className={styles.variantSwatch}
+                        style={{ background: variant.swatch }}
+                      />
+                      <span className={styles.variantLabel}>{variant.label}</span>
+                    </div>
+
+                    {/* Only show variant stock controls if no sizes */}
+                    {!variant.product_variant_sizes?.length > 0 && (
                       <div className={styles.stockControl}>
                         {variant.stock === 0 && (
                           <span className={styles.soldOutTag}>Sold Out</span>
@@ -335,13 +355,48 @@ export default function AdminPage() {
                           +
                         </button>
                       </div>
+                    )}
+                  </div>
+
+                  {/* Size breakdown per variant */}
+                  {variant.product_variant_sizes?.length > 0 && (
+                    <div className={styles.variantSizes}>
+                      {variant.product_variant_sizes.map(size => (
+                        <div key={size.id} className={styles.sizeRow}>
+                          <div className={styles.variantInfo}>
+                            <span className={styles.sizeTag}>{size.label}</span>
+                            <span className={styles.variantLabel}>{size.price}</span>
+                          </div>
+                          <div className={styles.stockControl}>
+                            {size.stock === 0 && (
+                              <span className={styles.soldOutTag}>Sold Out</span>
+                            )}
+                            {size.stock > 0 && size.stock <= 3 && (
+                              <span className={styles.lowStockTag}>Low Stock</span>
+                            )}
+                            <button
+                              className={styles.stockBtn}
+                              onClick={() => handleSizeStockUpdate(size.id, Math.max(0, size.stock - 1))}
+                            >
+                              −
+                            </button>
+                            <span className={styles.stockNum}>{size.stock}</span>
+                            <button
+                              className={styles.stockBtn}
+                              onClick={() => handleSizeStockUpdate(size.id, size.stock + 1)}
+                            >
+                              +
+                            </button>
+                          </div>
+                        </div>
+                      ))}
                     </div>
-                  ))}
+                  )}
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        )}
+        ))}
 
       </div>
     </div>

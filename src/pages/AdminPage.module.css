@@ -500,6 +500,47 @@
   text-align: center;
 }
 
+.sizesHeader {
+  padding: 0.5rem 0;
+  border-top: 1px solid var(--taupe-light);
+  margin-top: 0.5rem;
+}
+
+.sizesTitle {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-mid);
+}
+
+.sizeTag {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--text-dark);
+  background: var(--cream);
+  border: 1px solid var(--taupe-light);
+  padding: 3px 10px;
+}
+
+.variantSizes {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  padding-left: 2rem;
+  border-top: 1px solid var(--taupe-light);
+}
+
+.sizeRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.25rem 0;
+}
+
 /* ── Mobile ── */
 
 @media (max-width: 768px) {
