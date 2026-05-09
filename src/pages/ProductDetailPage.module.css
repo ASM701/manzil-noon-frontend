@@ -412,6 +412,21 @@
   cursor: not-allowed;
 }
 
+.videoWrap {
+  width: 100%;
+  overflow: hidden;
+  background: var(--cream);
+  margin-top: 1.5rem;
+  border: 1px solid var(--taupe-light);
+}
+
+.video {
+  width: 100%;
+  display: block;
+  max-height: 400px;
+  object-fit: cover;
+}
+
 /* ── Mobile ── */
 
 @media (max-width: 768px) {

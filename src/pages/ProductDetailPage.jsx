@@ -104,6 +104,7 @@ export default function ProductDetailPage() {
             <img src={variant?.img} alt={`${product.name} - ${variant?.label}`} />
           </div>
 
+
           {variants.length > 1 && (
             <div className={styles.thumbnails}>
               {variants.map((v, i) => (
@@ -123,10 +124,10 @@ export default function ProductDetailPage() {
           <p className={styles.category}>{product.category}</p>
           <h1 className={styles.name}>{product.name}</h1>
           <p className={styles.price}>{displayPrice}</p>
-          {product.name === 'Abaya Robe' ? (
+          {product.name === 'Everyday Robe' ? (
             <><><><p className={styles.includes}>✦ Includes matching slippers</p></><p className={styles.includes}>✦ Cotton</p></></>
           ) : null}
-          {product.category !== 'Bags' && product.name !== 'Button Robe' && product.name !== 'Sai Robe' && product.name !== 'Abaya Robe' && (
+          {product.category !== 'Bags' && product.name !== 'Button Robe' && product.name !== 'Sai Robe' && product.name !== 'Everyday Robe' && (
             <><><p className={styles.includes}>✦ Includes matching slippers</p><p className={styles.includes}>✦ Free Size</p></><p className={styles.includes}>✦ Cotton</p></>
           )}
           {product.name === 'Button Robe' || product.name === 'Sai Robe' ? (
@@ -239,6 +240,21 @@ export default function ProductDetailPage() {
               </svg>
             </button>
           </div>
+          {/* Video */}
+            {variant?.video_url && (
+              <div className={styles.videoWrap}>
+                <video
+                  key={variant.video_url}
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  className={styles.video}
+                >
+                  <source src={variant.video_url} type="video/mp4" />
+                </video>
+              </div>
+            )}
         </div>
       </div>
     </div>
