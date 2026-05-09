@@ -238,3 +238,10 @@ export async function updateSizeStock(token, sizeId, stock) {
   if (!res.ok) throw new Error('Failed to update size stock')
   return res.json()
 }
+
+// ── Settings ──
+export async function getSettings() {
+  const res = await fetch(`${BASE_URL}/api/settings`)
+  if (!res.ok) throw new Error('Failed to fetch settings')
+  return res.json()
+}

@@ -38,14 +38,15 @@ export function CartProvider({ children }) {
     }
   }, [user, token])
 
-  async function addItem(product, variant, size, overridePrice = null) {
+  async function addItem(product, variant, size, overridePrice = null, isGift = false) {
     if (!user) return
 
     const existing = items.find(
       item =>
         item.productId === product.id &&
         item.variantLabel === variant.label &&
-        item.size === (size || '')
+        item.size === (size || '') &&
+        item.isGift === isGift
     )
 
     const itemPrice = overridePrice || product.price
@@ -74,6 +75,7 @@ export function CartProvider({ children }) {
         swatch: variant.swatch,
         size: size || '',
         quantity: 1,
+        isGift,
       }
 
       setItems(prev => [...prev, newItem])

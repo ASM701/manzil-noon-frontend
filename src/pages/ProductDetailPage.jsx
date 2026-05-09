@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { getProduct, getProducts } from '../lib/api'
+import { getProduct, getProducts, getSettings } from '../lib/api'
 import { useCart } from '../context/CartContext'
 import { useWishlist } from '../context/WishlistContext'
 import { useAuth } from '../context/AuthContext'
 import styles from './ProductDetailPage.module.css'
+
 
 export default function ProductDetailPage() {
   const { id } = useParams()
@@ -19,6 +20,19 @@ export default function ProductDetailPage() {
   const [matchingBag, setMatchingBag] = useState(null)
   const [matchingBagVariant, setMatchingBagVariant] = useState(null)
   const [activeSize, setActiveSize] = useState(null)
+  const [giftWrap, setGiftWrap] = useState(false)
+  const [giftImageUrl, setGiftImageUrl] = useState('')
+  const [giftPriceValue, setGiftPriceValue] = useState(18)
+
+
+  useEffect(() => {
+    getSettings()
+      .then(settings => {
+        setGiftImageUrl(settings.gift_image_url || '')
+        setGiftPriceValue(Number(settings.gift_price_value) || 18)
+      })
+      .catch(err => console.error('Failed to load settings:', err))
+  }, [])
 
 
   useEffect(() => {
@@ -86,7 +100,10 @@ export default function ProductDetailPage() {
   const sizes = variant?.product_variant_sizes || []
   const selectedSize = sizes.find(s => s.label === activeSize)
   const wishlisted = isWishlisted(product.id, variant?.label)
-  const displayPrice = selectedSize ? selectedSize.price : product.price
+  const basePrice = selectedSize ? selectedSize.price : product.price
+  const basePriceValue = parseFloat(basePrice.replace('KD ', ''))
+  const totalPriceValue = giftWrap ? basePriceValue + giftPriceValue : basePriceValue
+  const displayPrice = `KD ${totalPriceValue.toFixed(3)}`
   const displayStock = selectedSize ? selectedSize.stock : sizes.length > 0 ? 999 : variant?.stock
 
   return (
@@ -222,9 +239,9 @@ export default function ProductDetailPage() {
                   return
                 }
                 if (sizes.length > 0 && !activeSize) return
-                addItem(product, variant, activeSize, displayPrice)
+                addItem(product, variant, activeSize, displayPrice, giftWrap)
                 if (includeSet && matchingBag && matchingBagVariant) {
-                  addItem(matchingBag, matchingBagVariant, null, matchingBag.set_price || matchingBag.price)
+                  addItem(matchingBag, matchingBagVariant, null, matchingBag.set_price || matchingBag.price, false)
                 }
               }}
             >
@@ -240,21 +257,48 @@ export default function ProductDetailPage() {
               </svg>
             </button>
           </div>
-          {/* Video */}
-            {variant?.video_url && (
-              <div className={styles.videoWrap}>
-                <video
-                  key={variant.video_url}
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  className={styles.video}
-                >
-                  <source src={variant.video_url} type="video/mp4" />
-                </video>
+
+          {/* Gift Wrapping */}
+          <div className={styles.giftSection}>
+            <button
+              className={`${styles.giftToggle} ${giftWrap ? styles.giftToggleActive : ''}`}
+              onClick={() => setGiftWrap(!giftWrap)}
+            >
+              <span className={styles.giftIcon}>🎁</span>
+              <span className={styles.giftText}>
+                Add Gift Wrapping
+                <span className={styles.giftPrice}>+KD {giftPriceValue.toFixed(3)}</span>
+              </span>
+              <span className={styles.giftCheck}>
+                {giftWrap ? '✓' : '+'}
+              </span>
+            </button>
+
+            {giftWrap && giftImageUrl && (
+              <div className={styles.giftPreview}>
+                <img src={giftImageUrl} alt="Gift wrapping" className={styles.giftImg} />
+                <p className={styles.giftNote}>
+                  Your order will be beautifully wrapped and ready to gift.
+                </p>
               </div>
             )}
+          </div>
+
+          {/* Video */}
+          {variant?.video_url && (
+            <div className={styles.videoWrap}>
+              <video
+                key={variant.video_url}
+                autoPlay
+                loop
+                muted
+                playsInline
+                className={styles.video}
+              >
+                <source src={variant.video_url} type="video/mp4" />
+              </video>
+            </div>
+          )}
         </div>
       </div>
     </div>

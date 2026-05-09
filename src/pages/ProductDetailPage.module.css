@@ -427,6 +427,90 @@
   object-fit: cover;
 }
 
+/* ── Gift Wrapping ── */
+
+.giftSection {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.giftToggle {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  background: none;
+  border: 1px solid var(--taupe-light);
+  padding: 1rem 1.2rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: left;
+}
+
+.giftToggle:hover {
+  border-color: var(--navy);
+}
+
+.giftToggleActive {
+  border-color: var(--navy);
+  background: var(--cream);
+}
+
+.giftIcon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.giftText {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--text-dark);
+  letter-spacing: 0.06em;
+}
+
+.giftPrice {
+  font-size: 12px;
+  color: var(--taupe);
+  font-weight: 300;
+}
+
+.giftCheck {
+  font-size: 16px;
+  color: var(--navy);
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
+.giftPreview {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  background: var(--cream);
+  border: 1px solid var(--taupe-light);
+  padding: 1rem;
+}
+
+.giftImg {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 1px solid var(--taupe-light);
+}
+
+.giftNote {
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--text-mid);
+  line-height: 1.7;
+}
+
 /* ── Mobile ── */
 
 @media (max-width: 768px) {

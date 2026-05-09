@@ -50,6 +50,9 @@ export default function CartSidebar() {
                 <div className={styles.itemDetails}>
                   <p className={styles.itemName}>{item.name}</p>
                   <div className={styles.itemMeta}>
+                    {item.isGift && (
+                      <span className={styles.giftTag}>🎁 Gift Wrapped</span>
+                    )}
                     <span
                       className={styles.itemSwatch}
                       style={{ background: item.swatch }}
@@ -101,7 +104,7 @@ export default function CartSidebar() {
             <p className={styles.shippingNote}>
               Shipping calculated at checkout
             </p>
-            <button 
+            <button
               className={styles.checkoutBtn}
               onClick={() => { setIsOpen(false); navigate('/checkout') }}
             >
