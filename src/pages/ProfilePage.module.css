@@ -397,6 +397,14 @@
   font-weight: 400;
 }
 
+.giftTag {
+  font-size: 11px;
+  color: var(--navy);
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  margin-top: 4px;
+}
+
 /* ── Mobile ── */
 
 @media (max-width: 768px) {

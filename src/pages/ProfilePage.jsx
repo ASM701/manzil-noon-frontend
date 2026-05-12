@@ -230,6 +230,9 @@ export default function ProfilePage() {
                                 {item.size && ` · ${item.size}`}
                                 {` · Qty ${item.quantity}`}
                               </p>
+                              {item.is_gift && (
+                                <p className={styles.giftTag}>🎁 Gift Wrapped</p>
+                              )}
                               <p className={styles.orderItemPrice}>{item.price}</p>
                             </div>
                           </div>

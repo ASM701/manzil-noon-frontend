@@ -89,6 +89,9 @@ export default function CheckoutPage() {
                     />
                     <span className={styles.itemVariant}>{item.variantLabel}</span>
                   </div>
+                  {item.isGift && (
+                    <p className={styles.giftTag}>🎁 Gift Wrapped</p>
+                  )}
                   <div className={styles.itemBottom}>
                     <span className={styles.itemQty}>Qty {item.quantity}</span>
                     <span className={styles.itemPrice}>{item.price}</span>

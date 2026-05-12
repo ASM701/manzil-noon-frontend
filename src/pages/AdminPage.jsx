@@ -55,23 +55,23 @@ export default function AdminPage() {
   }
 
   async function handleSizeStockUpdate(sizeId, newStock) {
-  try {
-    await updateSizeStock(token, sizeId, newStock)
-    setProducts(prev =>
-      prev.map(p => ({
-        ...p,
-        product_variants: p.product_variants?.map(v => ({
-          ...v,
-          product_variant_sizes: v.product_variant_sizes?.map(s =>
-            s.id === sizeId ? { ...s, stock: newStock } : s
-          )
+    try {
+      await updateSizeStock(token, sizeId, newStock)
+      setProducts(prev =>
+        prev.map(p => ({
+          ...p,
+          product_variants: p.product_variants?.map(v => ({
+            ...v,
+            product_variant_sizes: v.product_variant_sizes?.map(s =>
+              s.id === sizeId ? { ...s, stock: newStock } : s
+            )
+          }))
         }))
-      }))
-    )
-  } catch (err) {
-    console.error('Failed to update size stock:', err)
+      )
+    } catch (err) {
+      console.error('Failed to update size stock:', err)
+    }
   }
-}
 
   async function fetchOrders() {
     try {
@@ -285,6 +285,9 @@ export default function AdminPage() {
                                   {item.size && ` · ${item.size}`}
                                   {` · Qty ${item.quantity}`}
                                 </p>
+                                {item.is_gift && (
+                                  <p className={styles.giftTag}>🎁 Gift Wrapped</p>
+                                )}
                                 <p className={styles.itemPrice}>{item.price}</p>
                               </div>
                             </div>

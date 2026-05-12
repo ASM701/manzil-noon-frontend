@@ -140,6 +140,14 @@
   color: var(--navy);
 }
 
+.giftTag {
+  font-size: 11px;
+  color: var(--navy);
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  margin-top: 4px;
+}
+
 /* ── Totals ── */
 
 .totals {
