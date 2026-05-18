@@ -3,7 +3,7 @@ import { getProducts } from '../lib/api'
 import ProductCard from './ProductCard'
 import styles from './ProductGrid.module.css'
 
-const CATEGORIES = ['All', 'Robes', 'Ponchos', 'Bags']
+const CATEGORIES = ['All', 'Robes', 'Ponchos', 'Bags', 'Kids']
 
 export default function ProductGrid() {
   const [active, setActive] = useState('All')

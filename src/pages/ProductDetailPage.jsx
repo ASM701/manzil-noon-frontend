@@ -6,13 +6,13 @@ import { useWishlist } from '../context/WishlistContext'
 import { useAuth } from '../context/AuthContext'
 import styles from './ProductDetailPage.module.css'
 
-
 export default function ProductDetailPage() {
   const { id } = useParams()
   const navigate = useNavigate()
   const [product, setProduct] = useState(null)
   const [loading, setLoading] = useState(true)
   const [activeVariant, setActiveVariant] = useState(0)
+  const [selectedImage, setSelectedImage] = useState(0)
   const { user } = useAuth()
   const { addItem } = useCart()
   const { toggleWishlist, isWishlisted } = useWishlist()
@@ -24,7 +24,6 @@ export default function ProductDetailPage() {
   const [giftImageUrl, setGiftImageUrl] = useState('')
   const [giftPriceValue, setGiftPriceValue] = useState(18)
 
-
   useEffect(() => {
     getSettings()
       .then(settings => {
@@ -33,7 +32,6 @@ export default function ProductDetailPage() {
       })
       .catch(err => console.error('Failed to load settings:', err))
   }, [])
-
 
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -73,6 +71,7 @@ export default function ProductDetailPage() {
     if (product) {
       const currentVariant = product.product_variants?.[activeVariant]
       setActiveSize(null)
+      setSelectedImage(0)
       setIncludeSet(false)
       setMatchingBag(null)
       setMatchingBagVariant(null)
@@ -106,6 +105,14 @@ export default function ProductDetailPage() {
   const displayPrice = `KD ${totalPriceValue.toFixed(3)}`
   const displayStock = selectedSize ? selectedSize.stock : sizes.length > 0 ? 999 : variant?.stock
 
+  // Build all images array for gallery
+  const allImages = [
+    variant?.img,
+    ...(variant?.additional_images || [])
+  ].filter(Boolean)
+
+  const currentImage = allImages[selectedImage] || variant?.img
+
   return (
     <div className={styles.page}>
       <button className={styles.back} onClick={() => navigate(-1)}>
@@ -118,11 +125,11 @@ export default function ProductDetailPage() {
       <div className={styles.layout}>
         <div className={styles.imageSection}>
           <div className={`${styles.imgWrap} ${product.category === 'Bags' ? styles.imgWrapContain : ''}`}>
-            <img src={variant?.img} alt={`${product.name} - ${variant?.label}`} />
+            <img src={currentImage} alt={`${product.name} - ${variant?.label}`} />
           </div>
 
-
-          {variants.length > 1 && (
+          {/* Thumbnails — variant switcher for multi-variant products, image gallery for kids */}
+          {variants.length > 1 ? (
             <div className={styles.thumbnails}>
               {variants.map((v, i) => (
                 <button
@@ -134,22 +141,49 @@ export default function ProductDetailPage() {
                 </button>
               ))}
             </div>
-          )}
+          ) : allImages.length > 1 ? (
+            <div className={styles.thumbnails}>
+              {allImages.map((img, i) => (
+                <button
+                  key={i}
+                  className={`${styles.thumb} ${i === selectedImage ? styles.thumbActive : ''}`}
+                  onClick={() => setSelectedImage(i)}
+                >
+                  <img src={img} alt={`${variant?.label} ${i + 1}`} />
+                </button>
+              ))}
+            </div>
+          ) : null}
         </div>
 
         <div className={styles.details}>
           <p className={styles.category}>{product.category}</p>
           <h1 className={styles.name}>{product.name}</h1>
           <p className={styles.price}>{displayPrice}</p>
-          {product.name === 'Everyday Robe' ? (
-            <><><><p className={styles.includes}>✦ Includes matching slippers</p></><p className={styles.includes}>✦ Cotton</p></></>
-          ) : null}
-          {product.category !== 'Bags' && product.name !== 'Button Robe' && product.name !== 'Sai Robe' && product.name !== 'Everyday Robe' && (
-            <><><p className={styles.includes}>✦ Includes matching slippers</p><p className={styles.includes}>✦ Free Size</p></><p className={styles.includes}>✦ Cotton</p></>
+
+          {product.name === 'Everyday Robe' && (
+            <>
+              <p className={styles.includes}>✦ Includes matching slippers</p>
+              <p className={styles.includes}>✦ Cotton</p>
+            </>
           )}
-          {product.name === 'Button Robe' || product.name === 'Sai Robe' ? (
-            <><><><p className={styles.includes}>✦ Includes matching slippers</p><p className={styles.includes}>✦ Free Size</p></><p className={styles.includes}>✦ Cotton</p></><p className={styles.includes}>✦ Inner Dress</p></>
-          ) : null}
+          {product.category !== 'Bags' && product.category !== 'Kids' &&
+           product.name !== 'Button Robe' && product.name !== 'Sai Robe' &&
+           product.name !== 'Everyday Robe' && (
+            <>
+              <p className={styles.includes}>✦ Includes matching slippers</p>
+              <p className={styles.includes}>✦ Free Size</p>
+              <p className={styles.includes}>✦ Cotton</p>
+            </>
+          )}
+          {(product.name === 'Button Robe' || product.name === 'Sai Robe') && (
+            <>
+              <p className={styles.includes}>✦ Includes matching slippers</p>
+              <p className={styles.includes}>✦ Free Size</p>
+              <p className={styles.includes}>✦ Cotton</p>
+              <p className={styles.includes}>✦ Inner Dress</p>
+            </>
+          )}
 
           <div className={styles.section}>
             <p className={styles.label}>
@@ -188,7 +222,6 @@ export default function ProductDetailPage() {
             </div>
           )}
 
-
           {product.note && (
             <p className={styles.note}>* {product.note}</p>
           )}
@@ -211,8 +244,7 @@ export default function ProductDetailPage() {
                   <div className={styles.setProductInfo}>
                     <p className={styles.setProductName}>{matchingBag.name}</p>
                     <p className={styles.setProductVariant}>{matchingBagVariant.label}</p>
-                    <p className={styles.setProductPrice}>{matchingBag.set_price || matchingBag.price}
-                    </p>
+                    <p className={styles.setProductPrice}>{matchingBag.set_price || matchingBag.price}</p>
                   </div>
                 </div>
                 <button
