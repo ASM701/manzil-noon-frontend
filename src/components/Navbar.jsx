@@ -1,19 +1,28 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useCart } from '../context/CartContext'
 import { useWishlist } from '../context/WishlistContext'
 import { useAuth } from '../context/AuthContext'
+import { getProfile } from '../lib/api'
 import LogoMark from './LogoMark'
 import styles from './Navbar.module.css'
-import { getProfile } from '../lib/api'
+
+const COLLECTIONS = [
+  { label: 'Robes', category: 'Robes' },
+  { label: 'Ponchos', category: 'Ponchos' },
+  { label: 'Bags', category: 'Bags' },
+  { label: 'Kids', category: 'Kids' },
+]
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
+  const [collectionsOpen, setCollectionsOpen] = useState(false)
+  const [isAdmin, setIsAdmin] = useState(false)
   const { totalItems, setIsOpen } = useCart()
   const { totalItems: wishlistCount } = useWishlist()
-  const { user, logout, token } = useAuth()
+  const { user, token, logout } = useAuth()
   const navigate = useNavigate()
-  const [isAdmin, setIsAdmin] = useState(false)
+  const collectionsRef = useRef(null)
 
   useEffect(() => {
     if (user && token) {
@@ -25,9 +34,24 @@ export default function Navbar() {
     }
   }, [user, token])
 
+  useEffect(() => {
+    function handleClickOutside(e) {
+      if (collectionsRef.current && !collectionsRef.current.contains(e.target)) {
+        setCollectionsOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
+
   async function handleLogout() {
     await logout()
     navigate('/')
+  }
+
+  function handleCollection(category) {
+    setCollectionsOpen(false)
+    navigate(`/?category=${category}`)
   }
 
   return (
@@ -38,19 +62,36 @@ export default function Navbar() {
       </Link>
 
       <ul className={`${styles.links} ${menuOpen ? styles.open : ''}`}>
-        <li><Link to="/">New In</Link></li>
-        <li><Link to="/">Collections</Link></li>
+        <li><Link to="/new-in">New In</Link></li>
+        <li className={styles.collectionsItem} ref={collectionsRef}>
+          <button
+            className={styles.collectionsBtn}
+            onClick={() => setCollectionsOpen(!collectionsOpen)}
+          >
+            Collections
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M6 9l6 6 6-6" />
+            </svg>
+          </button>
+          {collectionsOpen && (
+            <div className={styles.dropdown}>
+              {COLLECTIONS.map(col => (
+                <button
+                  key={col.category}
+                  className={styles.dropdownItem}
+                  onClick={() => handleCollection(col.category)}
+                >
+                  {col.label}
+                </button>
+              ))}
+            </div>
+          )}
+        </li>
         <li><Link to="/about">About</Link></li>
         <li><Link to="/contact">Contact</Link></li>
       </ul>
 
       <div className={styles.actions}>
-        <button className={styles.iconBtn} aria-label="Search">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-            <circle cx="11" cy="11" r="8" /><path d="M21 21l-4.35-4.35" />
-          </svg>
-        </button>
-
         <button
           className={styles.iconBtn}
           aria-label="Wishlist"
@@ -78,9 +119,7 @@ export default function Navbar() {
         {user ? (
           <div className={styles.userMenu}>
             {isAdmin && (
-              <Link to="/admin" className={styles.adminBtn}>
-                Admin
-              </Link>
+              <Link to="/admin" className={styles.adminBtn}>Admin</Link>
             )}
             <Link to="/profile" className={styles.authBtn}>
               {user.user_metadata?.full_name?.split(' ')[0] || 'Account'}
@@ -94,8 +133,6 @@ export default function Navbar() {
             Sign In
           </Link>
         )}
-
-
 
         <button
           className={styles.hamburger}

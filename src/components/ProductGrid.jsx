@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { getProducts } from '../lib/api'
 import ProductCard from './ProductCard'
 import styles from './ProductGrid.module.css'
@@ -6,10 +7,18 @@ import styles from './ProductGrid.module.css'
 const CATEGORIES = ['All', 'Robes', 'Ponchos', 'Bags', 'Kids']
 
 export default function ProductGrid() {
-  const [active, setActive] = useState('All')
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [searchParams, setSearchParams] = useSearchParams()
+  const categoryParam = searchParams.get('category')
+  const [active, setActive] = useState(categoryParam || 'All')
+
+  useEffect(() => {
+    if (categoryParam) {
+      setActive(categoryParam)
+    }
+  }, [categoryParam])
 
   useEffect(() => {
     getProducts()
@@ -23,17 +32,26 @@ export default function ProductGrid() {
       })
   }, [])
 
+  function handleFilter(cat) {
+    setActive(cat)
+    if (cat === 'All') {
+      setSearchParams({})
+    } else {
+      setSearchParams({ category: cat })
+    }
+  }
+
   const filtered =
     active === 'All' ? products : products.filter(p => p.category === active)
 
   return (
     <>
-      <div className={styles.filterBar}>
+      <div className={styles.filterBar} id="products">
         {CATEGORIES.map(cat => (
           <button
             key={cat}
             className={`${styles.filterBtn} ${active === cat ? styles.active : ''}`}
-            onClick={() => setActive(cat)}
+            onClick={() => handleFilter(cat)}
           >
             {cat}
           </button>

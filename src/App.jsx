@@ -18,6 +18,7 @@ import ProfilePage from './pages/ProfilePage'
 import CheckoutPage from './pages/CheckoutPage'
 import OrderSuccessPage from './pages/OrderSuccessPage'
 import AdminPage from './pages/AdminPage'
+import NewInPage from './pages/NewInPage'
 
 function HomePage() {
   return (
@@ -49,6 +50,7 @@ export default function App() {
               <Route path="/checkout" element={<CheckoutPage />} />
               <Route path="/order-success" element={<OrderSuccessPage />} />
               <Route path="/admin" element={<AdminPage />} />
+              <Route path="/new-in" element={<NewInPage />} />
             </Routes>
             <Footer />
           </CartProvider>

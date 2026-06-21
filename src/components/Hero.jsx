@@ -2,6 +2,10 @@ import styles from './Hero.module.css'
 import LogoMark from './LogoMark'
 
 export default function Hero() {
+  function scrollToProducts() {
+    document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' })
+  }
+
   return (
     <section className={styles.hero}>
       <div className={styles.text}>
@@ -13,12 +17,14 @@ export default function Hero() {
           Thoughtfully curated women's fashion — each piece a quiet expression
           of grace, crafted for the modern woman.
         </p>
-        <button className={styles.btn}>Explore Collection</button>
+        <button className={styles.btn} onClick={scrollToProducts}>
+          Explore Collection
+        </button>
       </div>
 
       <div className={styles.accent}>
         <div className={styles.circle}>
-          <LogoMark size={300} />
+          <LogoMark size={330} />
         </div>
       </div>
     </section>
