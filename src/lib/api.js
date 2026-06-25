@@ -245,3 +245,17 @@ export async function getSettings() {
   if (!res.ok) throw new Error('Failed to fetch settings')
   return res.json()
 }
+
+// ── Contact ──
+export async function sendContactMessage(name, email, subject, message) {
+  const res = await fetch(`${BASE_URL}/api/contact`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name, email, subject, message })
+  })
+  if (!res.ok) {
+    const err = await res.json()
+    throw new Error(err.error)
+  }
+  return res.json()
+}

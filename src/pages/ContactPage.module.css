@@ -201,6 +201,24 @@ a.infoValue:hover {
   background: var(--navy-light);
 }
 
+.successMsg {
+  font-size: 13px;
+  color: #2d7a4f;
+  background: #f0faf4;
+  border: 1px solid #b4dfc7;
+  padding: 12px 16px;
+  margin-bottom: 1.5rem;
+}
+
+.errorMsg {
+  font-size: 13px;
+  color: #a63232;
+  background: #fdf0f0;
+  border: 1px solid #f5c4c4;
+  padding: 12px 16px;
+  margin-bottom: 1.5rem;
+}
+
 /* ── Mobile ── */
 
 @media (max-width: 768px) {
