@@ -28,8 +28,8 @@ export default function ContactPage() {
 
           <div className={styles.infoItem}>
             <p className={styles.infoLabel}>Email</p>
-            <a href="mailto:hello@manzilnoon.com" className={styles.infoValue}>
-              hello@manzilnoon.com
+            <a href="mailto:Manzilnoon@hotmail.com" className={styles.infoValue}>
+              Manzilnoon@hotmail.com
             </a>
           </div>
 
@@ -53,9 +53,9 @@ export default function ContactPage() {
           <div className={styles.social}>
             <p className={styles.infoLabel}>Follow Us</p>
             <div className={styles.socialLinks}>
-              <a href="#" className={styles.socialLink}>Instagram</a>
-              <a href="#" className={styles.socialLink}>TikTok</a>
-              <a href="#" className={styles.socialLink}>Pinterest</a>
+              <a href="https://www.instagram.com/manzilnoonkw" className={styles.socialLink} target="_blank" rel="noopener noreferrer">
+                Instagram
+              </a>
             </div>
           </div>
         </div>

@@ -1,7 +1,10 @@
+import { useNavigate } from 'react-router-dom'
 import LogoMark from './LogoMark'
 import styles from './Footer.module.css'
 
 export default function Footer() {
+  const navigate = useNavigate()
+
   return (
     <footer className={styles.footer}>
       <div className={styles.top}>
@@ -11,18 +14,18 @@ export default function Footer() {
             <span className={styles.brandName}>Manzil Noon</span>
           </div>
           <p className={styles.tagline}>
-            A house of fashion, built with love.
+            A family house of fashion, built with love.
           </p>
         </div>
 
         <div className={styles.linkGroup}>
           <h4>Shop</h4>
           <ul>
-            <li>New In</li>
-            <li>Dresses</li>
-            <li>Tops &amp; Sets</li>
-            <li>Bottoms</li>
-            <li>Outerwear</li>
+            <li onClick={() => navigate('/new-in')}>New In</li>
+            <li onClick={() => navigate('/?category=Robes')}>Robes</li>
+            <li onClick={() => navigate('/?category=Ponchos')}>Ponchos</li>
+            <li onClick={() => navigate('/?category=Bags')}>Bags</li>
+            <li onClick={() => navigate('/?category=Kids')}>Kids</li>
           </ul>
         </div>
 
@@ -31,7 +34,7 @@ export default function Footer() {
           <ul>
             <li>Size Guide</li>
             <li>Shipping &amp; Returns</li>
-            <li>Contact Us</li>
+            <li onClick={() => navigate('/contact')}>Contact Us</li>
             <li>FAQ</li>
           </ul>
         </div>
@@ -39,9 +42,15 @@ export default function Footer() {
         <div className={styles.linkGroup}>
           <h4>Follow Us</h4>
           <ul>
-            <li>Instagram</li>
-            <li>TikTok</li>
-            <li>Pinterest</li>
+            <li>
+              <a
+                href="https://www.instagram.com/manzilnoonkw"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Instagram
+              </a>
+            </li>
           </ul>
         </div>
       </div>
