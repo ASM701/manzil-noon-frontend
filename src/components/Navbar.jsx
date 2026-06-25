@@ -26,9 +26,20 @@ export default function Navbar() {
 
   useEffect(() => {
     if (user && token) {
-      getProfile(token)
-        .then(profile => setIsAdmin(profile.is_admin || false))
-        .catch(() => setIsAdmin(false))
+      const checkAdmin = async () => {
+        let attempts = 0
+        while (attempts < 3) {
+          try {
+            const profile = await getProfile(token)
+            setIsAdmin(profile.is_admin || false)
+            return
+          } catch {
+            attempts++
+            await new Promise(resolve => setTimeout(resolve, 1000))
+          }
+        }
+      }
+      checkAdmin()
     } else {
       setIsAdmin(false)
     }
