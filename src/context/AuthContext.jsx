@@ -9,8 +9,8 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
+      console.log('Initial session:', session ? 'found' : 'not found')
       if (session) {
         setUser(session.user)
         setToken(session.access_token)
@@ -18,9 +18,9 @@ export function AuthProvider({ children }) {
       setLoading(false)
     })
 
-    // Listen for auth changes and token refreshes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
+        console.log('Auth event:', event, session ? 'has session' : 'no session')
         if (session) {
           setUser(session.user)
           setToken(session.access_token)
