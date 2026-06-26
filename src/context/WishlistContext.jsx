@@ -6,14 +6,17 @@ const WishlistContext = createContext()
 
 export function WishlistProvider({ children }) {
   const [items, setItems] = useState([])
-  const { user, token, loading } = useAuth()
 
   // Load wishlist from database when user logs in
+  const { user, token, loading } = useAuth()
+
   useEffect(() => {
     if (loading) return
+
     if (user && token) {
-      getWishlist(token)
-        .then(data => {
+      const fetchWithRetry = async (attempts = 0) => {
+        try {
+          const data = await getWishlist(token)
           const formatted = data.map(entry => ({
             productId: entry.product_id,
             name: entry.products.name,
@@ -29,8 +32,15 @@ export function WishlistProvider({ children }) {
             allVariants: entry.products.product_variants,
           }))
           setItems(formatted)
-        })
-        .catch(err => console.error('Failed to load wishlist:', err))
+        } catch (err) {
+          if (attempts < 3) {
+            setTimeout(() => fetchWithRetry(attempts + 1), 1500)
+          } else {
+            console.error('Failed to load wishlist after retries:', err)
+          }
+        }
+      }
+      fetchWithRetry()
     } else {
       setItems([])
     }

@@ -7,15 +7,18 @@ const CartContext = createContext()
 export function CartProvider({ children }) {
   const [items, setItems] = useState([])
   const [isOpen, setIsOpen] = useState(false)
-  const { user, token, loading } = useAuth()
 
 
   // Load cart from database when user logs in
+  const { user, token, loading } = useAuth()
+
   useEffect(() => {
     if (loading) return
+
     if (user && token) {
-      getCart(token)
-        .then(data => {
+      const fetchWithRetry = async (attempts = 0) => {
+        try {
+          const data = await getCart(token)
           const formatted = data.map(entry => ({
             id: entry.id,
             productId: entry.product_id,
@@ -32,8 +35,15 @@ export function CartProvider({ children }) {
             quantity: entry.quantity,
           }))
           setItems(formatted)
-        })
-        .catch(err => console.error('Failed to load cart:', err))
+        } catch (err) {
+          if (attempts < 3) {
+            setTimeout(() => fetchWithRetry(attempts + 1), 1500)
+          } else {
+            console.error('Failed to load cart after retries:', err)
+          }
+        }
+      }
+      fetchWithRetry()
     } else {
       setItems([])
     }

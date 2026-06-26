@@ -25,24 +25,24 @@ export default function Navbar() {
   const collectionsRef = useRef(null)
 
   useEffect(() => {
-    if (user && token) {
-      const checkAdmin = async () => {
-        let attempts = 0
-        while (attempts < 3) {
-          try {
-            const profile = await getProfile(token)
-            setIsAdmin(profile.is_admin || false)
-            return
-          } catch {
-            attempts++
-            await new Promise(resolve => setTimeout(resolve, 1000))
-          }
+    if (!user || !token) {
+      setIsAdmin(false)
+      return
+    }
+
+    const checkAdmin = async (attempts = 0) => {
+      try {
+        const profile = await getProfile(token)
+        setIsAdmin(profile.is_admin || false)
+      } catch {
+        if (attempts < 3) {
+          setTimeout(() => checkAdmin(attempts + 1), 1500)
+        } else {
+          setIsAdmin(false)
         }
       }
-      checkAdmin()
-    } else {
-      setIsAdmin(false)
     }
+    checkAdmin()
   }, [user, token])
 
   useEffect(() => {

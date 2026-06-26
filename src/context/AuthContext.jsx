@@ -12,15 +12,19 @@ export function AuthProvider({ children }) {
     const savedToken = localStorage.getItem('token')
     const savedUser = localStorage.getItem('user')
     if (savedToken && savedUser) {
-      setToken(savedToken)
-      setUser(JSON.parse(savedUser))
+      try {
+        setToken(savedToken)
+        setUser(JSON.parse(savedUser))
+      } catch {
+        localStorage.removeItem('token')
+        localStorage.removeItem('user')
+      }
     }
     setLoading(false)
   }, [])
 
   async function register(full_name, email, password) {
-    const data = await apiRegister(full_name, email, password)
-    return data
+    return await apiRegister(full_name, email, password)
   }
 
   async function login(email, password) {
@@ -33,12 +37,13 @@ export function AuthProvider({ children }) {
   }
 
   async function logout() {
+    const currentToken = token
     setUser(null)
     setToken(null)
     localStorage.removeItem('token')
     localStorage.removeItem('user')
     try {
-      await apiLogout(token)
+      await apiLogout(currentToken)
     } catch (err) {
       console.error('Logout error:', err)
     }
