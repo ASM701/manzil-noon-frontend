@@ -21,14 +21,20 @@ export function AuthProvider({ children }) {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
         console.log('Auth event:', event, session ? 'has session' : 'no session')
-        if (session) {
-          setUser(session.user)
-          setToken(session.access_token)
-        } else {
+        if (event === 'SIGNED_OUT') {
           setUser(null)
           setToken(null)
+          setLoading(false)
+        } else if (session) {
+          // Small delay to ensure token is ready
+          setTimeout(() => {
+            setUser(session.user)
+            setToken(session.access_token)
+            setLoading(false)
+          }, 100)
+        } else {
+          setLoading(false)
         }
-        setLoading(false)
       }
     )
 
