@@ -30,6 +30,14 @@ function HomePage() {
   )
 }
 
+useEffect(() => {
+  // Keep backend warm by pinging every 4 minutes
+  const ping = () => fetch(`${import.meta.env.VITE_API_URL}/`)
+  ping()
+  const interval = setInterval(ping, 4 * 60 * 1000)
+  return () => clearInterval(interval)
+}, [])
+
 export default function App() {
   return (
     <BrowserRouter>
