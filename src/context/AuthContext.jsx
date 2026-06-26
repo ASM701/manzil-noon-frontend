@@ -12,28 +12,10 @@ export function AuthProvider({ children }) {
     const savedToken = localStorage.getItem('token')
     const savedUser = localStorage.getItem('user')
     if (savedToken && savedUser) {
-      // Verify token is still valid before using it
-      fetch(`${import.meta.env.VITE_API_URL}/api/users/me`, {
-        headers: { Authorization: `Bearer ${savedToken}` }
-      })
-        .then(res => {
-          if (res.ok) {
-            setToken(savedToken)
-            setUser(JSON.parse(savedUser))
-          } else {
-            // Token expired — clear storage
-            localStorage.removeItem('token')
-            localStorage.removeItem('user')
-          }
-        })
-        .catch(() => {
-          localStorage.removeItem('token')
-          localStorage.removeItem('user')
-        })
-        .finally(() => setLoading(false))
-    } else {
-      setLoading(false)
+      setToken(savedToken)
+      setUser(JSON.parse(savedUser))
     }
+    setLoading(false)
   }, [])
 
   async function register(full_name, email, password) {
@@ -51,11 +33,15 @@ export function AuthProvider({ children }) {
   }
 
   async function logout() {
-    await apiLogout(token)
     setUser(null)
     setToken(null)
     localStorage.removeItem('token')
     localStorage.removeItem('user')
+    try {
+      await apiLogout(token)
+    } catch (err) {
+      console.error('Logout error:', err)
+    }
   }
 
   return (

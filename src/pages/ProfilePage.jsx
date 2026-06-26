@@ -32,31 +32,20 @@ export default function ProfilePage() {
 
   async function fetchData() {
     if (!token) return
-    let attempts = 0
-    const maxAttempts = 3
-
-    while (attempts < maxAttempts) {
-      try {
-        const [profileData, ordersData] = await Promise.all([
-          getProfile(token),
-          getOrders(token)
-        ])
-        setProfile(profileData)
-        setOrders(ordersData)
-        setFullName(profileData.full_name || '')
-        setPhone(profileData.phone || '')
-        setAddress(profileData.address || '')
-        return
-      } catch (err) {
-        attempts++
-        if (attempts === maxAttempts) {
-          setError('Failed to load profile. Please refresh the page.')
-        } else {
-          await new Promise(resolve => setTimeout(resolve, 1000))
-        }
-      } finally {
-        setLoading(false)
-      }
+    try {
+      const [profileData, ordersData] = await Promise.all([
+        getProfile(token),
+        getOrders(token)
+      ])
+      setProfile(profileData)
+      setOrders(ordersData)
+      setFullName(profileData.full_name || '')
+      setPhone(profileData.phone || '')
+      setAddress(profileData.address || '')
+    } catch (err) {
+      setError('Failed to load profile. Please refresh the page.')
+    } finally {
+      setLoading(false)
     }
   }
 
