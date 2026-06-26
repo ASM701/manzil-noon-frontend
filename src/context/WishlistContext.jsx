@@ -6,10 +6,11 @@ const WishlistContext = createContext()
 
 export function WishlistProvider({ children }) {
   const [items, setItems] = useState([])
-  const { user, token } = useAuth()
+  const { user, token, loading } = useAuth()
 
   // Load wishlist from database when user logs in
   useEffect(() => {
+    if (loading) return
     if (user && token) {
       getWishlist(token)
         .then(data => {
@@ -33,18 +34,18 @@ export function WishlistProvider({ children }) {
     } else {
       setItems([])
     }
-  }, [user, token])
+  }, [user, token, loading])
 
   async function toggleWishlist(product, variant) {
-  if (!user) {
-    window.location.href = '/login'
-    return
-  }
-  const existing = items.find(
-    item =>
-      item.productId === product.id &&
-      item.variantLabel === variant.label
-  )
+    if (!user) {
+      window.location.href = '/login'
+      return
+    }
+    const existing = items.find(
+      item =>
+        item.productId === product.id &&
+        item.variantLabel === variant.label
+    )
 
     if (existing) {
       // Remove from state immediately

@@ -7,11 +7,12 @@ const CartContext = createContext()
 export function CartProvider({ children }) {
   const [items, setItems] = useState([])
   const [isOpen, setIsOpen] = useState(false)
-  const { user, token } = useAuth()
+  const { user, token, loading } = useAuth()
 
 
   // Load cart from database when user logs in
   useEffect(() => {
+    if (loading) return
     if (user && token) {
       getCart(token)
         .then(data => {
@@ -36,7 +37,7 @@ export function CartProvider({ children }) {
     } else {
       setItems([])
     }
-  }, [user, token])
+  }, [user, token, loading])
 
   async function addItem(product, variant, size, overridePrice = null, isGift = false) {
     if (!user) return
