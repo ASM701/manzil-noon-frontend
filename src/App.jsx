@@ -19,6 +19,7 @@ import CheckoutPage from './pages/CheckoutPage'
 import OrderSuccessPage from './pages/OrderSuccessPage'
 import AdminPage from './pages/AdminPage'
 import NewInPage from './pages/NewInPage'
+import { useEffect } from 'react'
 
 function HomePage() {
   return (
