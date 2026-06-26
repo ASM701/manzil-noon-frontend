@@ -26,37 +26,39 @@ export default function ProfilePage() {
       navigate('/login')
       return
     }
+    if (!token) return
     fetchData()
-  }, [user])
+  }, [user, token])
 
   async function fetchData() {
-  let attempts = 0
-  const maxAttempts = 3
+    if (!token) return
+    let attempts = 0
+    const maxAttempts = 3
 
-  while (attempts < maxAttempts) {
-    try {
-      const [profileData, ordersData] = await Promise.all([
-        getProfile(token),
-        getOrders(token)
-      ])
-      setProfile(profileData)
-      setOrders(ordersData)
-      setFullName(profileData.full_name || '')
-      setPhone(profileData.phone || '')
-      setAddress(profileData.address || '')
-      return
-    } catch (err) {
-      attempts++
-      if (attempts === maxAttempts) {
-        setError('Failed to load profile. Please refresh the page.')
-      } else {
-        await new Promise(resolve => setTimeout(resolve, 1000))
+    while (attempts < maxAttempts) {
+      try {
+        const [profileData, ordersData] = await Promise.all([
+          getProfile(token),
+          getOrders(token)
+        ])
+        setProfile(profileData)
+        setOrders(ordersData)
+        setFullName(profileData.full_name || '')
+        setPhone(profileData.phone || '')
+        setAddress(profileData.address || '')
+        return
+      } catch (err) {
+        attempts++
+        if (attempts === maxAttempts) {
+          setError('Failed to load profile. Please refresh the page.')
+        } else {
+          await new Promise(resolve => setTimeout(resolve, 1000))
+        }
+      } finally {
+        setLoading(false)
       }
-    } finally {
-      setLoading(false)
     }
   }
-}
 
   async function handleSave(e) {
     e.preventDefault()
