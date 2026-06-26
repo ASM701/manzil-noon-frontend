@@ -12,11 +12,9 @@ export function WishlistProvider({ children }) {
 
   useEffect(() => {
     if (loading) return
-
     if (user && token) {
-      const fetchWithRetry = async (attempts = 0) => {
-        try {
-          const data = await getWishlist(token)
+      getWishlist(token)
+        .then(data => {
           const formatted = data.map(entry => ({
             productId: entry.product_id,
             name: entry.products.name,
@@ -32,15 +30,8 @@ export function WishlistProvider({ children }) {
             allVariants: entry.products.product_variants,
           }))
           setItems(formatted)
-        } catch (err) {
-          if (attempts < 3) {
-            setTimeout(() => fetchWithRetry(attempts + 1), 1500)
-          } else {
-            console.error('Failed to load wishlist after retries:', err)
-          }
-        }
-      }
-      fetchWithRetry()
+        })
+        .catch(err => console.error('Failed to load wishlist:', err))
     } else {
       setItems([])
     }

@@ -1,4 +1,3 @@
-import { useEffect } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { CartProvider } from './context/CartContext'
 import { WishlistProvider } from './context/WishlistContext'
@@ -32,13 +31,6 @@ function HomePage() {
 }
 
 export default function App() {
-  useEffect(() => {
-    const ping = () => fetch(`${import.meta.env.VITE_API_URL}/`)
-    ping()
-    const interval = setInterval(ping, 4 * 60 * 1000)
-    return () => clearInterval(interval)
-  }, [])
-
   return (
     <BrowserRouter>
       <AuthProvider>

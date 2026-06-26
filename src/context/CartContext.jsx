@@ -14,11 +14,9 @@ export function CartProvider({ children }) {
 
   useEffect(() => {
     if (loading) return
-
     if (user && token) {
-      const fetchWithRetry = async (attempts = 0) => {
-        try {
-          const data = await getCart(token)
+      getCart(token)
+        .then(data => {
           const formatted = data.map(entry => ({
             id: entry.id,
             productId: entry.product_id,
@@ -35,15 +33,8 @@ export function CartProvider({ children }) {
             quantity: entry.quantity,
           }))
           setItems(formatted)
-        } catch (err) {
-          if (attempts < 3) {
-            setTimeout(() => fetchWithRetry(attempts + 1), 1500)
-          } else {
-            console.error('Failed to load cart after retries:', err)
-          }
-        }
-      }
-      fetchWithRetry()
+        })
+        .catch(err => console.error('Failed to load cart:', err))
     } else {
       setItems([])
     }
