@@ -1,8 +1,8 @@
 # Manzil Noon — منزل نون
 
-> A family house of fashion, built with love and named for Nada.
+> A family house of fashion, built with love.
 
-Manzil Noon is a full-stack e-commerce website for a Kuwaiti loungewear brand. The name translates to "House of Noon" in Arabic — Noon (ن) being the Arabic letter for N, the initial of the founder's mother, Nada. Products are crafted in Lebanon and sold in Kuwait.
+Manzil Noon is a full-stack e-commerce website for a Kuwaiti loungewear brand. The name translates to "House of Noon" in Arabic — Noon (ن) being the Arabic letter for N. Products are crafted in Lebanon and sold in Kuwait.
 
 🌐 **Live Site:** [manzilnoon.com](https://manzilnoon.com)
 
